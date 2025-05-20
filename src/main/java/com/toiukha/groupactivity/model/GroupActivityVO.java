@@ -21,6 +21,33 @@ public class GroupActivityVO implements Serializable{
 	private Byte recruitStatus;
 	
 	
+	public GroupActivityVO() {
+		super();
+	}
+	
+	
+	public GroupActivityVO(Integer actId, String actName, String actDesc, String imgPath, Integer itnId, Integer hostId,
+			Timestamp signupStart, Timestamp signupEnd, Integer maxCap, Integer signupCnt, Timestamp actStart,
+			Timestamp actEnd, Byte isPublic, Byte allowCancel, Byte recruitStatus) {
+		super();
+		this.actId = actId;
+		this.actName = actName;
+		this.actDesc = actDesc;
+		this.imgPath = imgPath;
+		this.itnId = itnId;
+		this.hostId = hostId;
+		this.signupStart = signupStart;
+		this.signupEnd = signupEnd;
+		this.maxCap = maxCap;
+		this.signupCnt = signupCnt;
+		this.actStart = actStart;
+		this.actEnd = actEnd;
+		this.isPublic = isPublic;
+		this.allowCancel = allowCancel;
+		this.recruitStatus = recruitStatus;
+	}
+
+
 	public Integer getActId() {
 		return actId;
 	}
