@@ -11,6 +11,10 @@ public class ItnVO implements Serializable {
 	private Byte isPublic;
 	private Byte itnStatus;
 	
+    // 無參數建構子
+    public ItnVO() {
+    }
+    
 	//get,set
 	public Integer getItnId() {
 		return itnId;

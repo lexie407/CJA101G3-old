@@ -8,6 +8,10 @@ public class FavSpotVO implements Serializable {
 	private Integer favSpotId;    
 	private Integer memId;
 	
+    // 無參數建構子
+    public FavSpotVO() {
+    }
+    
 	//get,set
 	public Integer getFavSpotId() {
 		return favSpotId;
