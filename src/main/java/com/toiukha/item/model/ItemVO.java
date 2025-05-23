@@ -42,10 +42,10 @@ public class ItemVO implements Serializable{
 	public void setItemId(Integer itemId) {
 		this.itemId = itemId;
 	}
-	public Integer getStoId() {
+	public Integer getStoreId() {
 		return storeId;
 	}
-	public void setStoId(Integer stoId) {
+	public void setStoreId(Integer stoId) {
 		this.storeId = stoId;
 	}
 	public String getItemName() {
