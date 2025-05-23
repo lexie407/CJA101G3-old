@@ -15,6 +15,10 @@ public class SpotVO implements Serializable {
     private Byte spotStatus;    
     private String spotDesc;
     
+    // 無參數建構子
+    public SpotVO() {
+    }
+    
     //get,set
 	public Integer getSpotId() {
 		return spotId;

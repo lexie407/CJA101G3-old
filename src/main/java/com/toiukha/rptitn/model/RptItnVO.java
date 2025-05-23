@@ -15,6 +15,10 @@ public class RptItnVO implements Serializable {
     private Timestamp rptProcTime; 
     private Integer adminId;
     
+    // 無參數建構子
+    public RptItnVO() {
+    }
+    
     //set,get
 	public Integer getRptId() {
 		return rptId;

@@ -8,6 +8,10 @@ public class ItnSpotVO implements Serializable {
     private Integer itnId;   
     private Integer spotId;
     
+    // 無參數建構子
+    public ItnSpotVO() {
+    }
+    
     //set,get
 	public Integer getItnId() {
 		return itnId;
