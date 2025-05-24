@@ -17,6 +17,7 @@ public class RptItnVO implements Serializable {
     
     // 無參數建構子
     public RptItnVO() {
+    	super();
     }
     
     //set,get

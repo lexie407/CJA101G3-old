@@ -117,7 +117,7 @@ public class SpotJDBCDAO implements SpotDAO_interface {
 	                spotVO.setSpotLoc(rs.getString("spotLoc"));
 	                spotVO.setSpotLat(rs.getDouble("spotLat"));
 	                spotVO.setSpotLng(rs.getDouble("spotLng"));
-	                spotVO.setSpotStatus(rs.getInt("spotStatus"));
+	                spotVO.setSpotStatus(rs.getByte("spotStatus"));
 	                spotVO.setSpotDesc(rs.getString("spotDesc"));
 	            }
 	        } catch (ClassNotFoundException e) {
@@ -152,7 +152,7 @@ public class SpotJDBCDAO implements SpotDAO_interface {
 	                spotVO.setSpotLoc(rs.getString("spotLoc"));
 	                spotVO.setSpotLat(rs.getDouble("spotLat"));
 	                spotVO.setSpotLng(rs.getDouble("spotLng"));
-	                spotVO.setSpotStatus(rs.getInt("spotStatus"));
+	                spotVO.setSpotStatus(rs.getByte("spotStatus"));
 	                spotVO.setSpotDesc(rs.getString("spotDesc"));
 	                list.add(spotVO);
 	            }

@@ -13,6 +13,7 @@ public class SpotImgVO implements Serializable {
     
     // 無參數建構子
     public SpotImgVO() {
+    	super();
     }
     
     //get,set

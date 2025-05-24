@@ -13,6 +13,7 @@ public class ItnVO implements Serializable {
 	
     // 無參數建構子
     public ItnVO() {
+    	super();
     }
     
 	//get,set

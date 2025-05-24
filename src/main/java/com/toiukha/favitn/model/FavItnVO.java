@@ -10,6 +10,7 @@ public class FavItnVO implements Serializable {
     
  // 無參數建構子（必要）
     public FavItnVO() {
+    	super();
     }
     
     //get,set

@@ -10,6 +10,7 @@ public class ItnSpotVO implements Serializable {
     
     // 無參數建構子
     public ItnSpotVO() {
+    	super();
     }
     
     //set,get

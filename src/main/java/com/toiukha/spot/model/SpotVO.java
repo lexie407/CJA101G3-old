@@ -12,11 +12,12 @@ public class SpotVO implements Serializable {
     private String spotLoc;      
     private Double spotLat; 
     private Double spotLng;  
-    private Byte spotStatus;    
+    private Byte spotStatus;   
     private String spotDesc;
     
     // 無參數建構子
     public SpotVO() {
+    	super();
     }
     
     //get,set
@@ -57,10 +58,10 @@ public class SpotVO implements Serializable {
 		this.spotLng = spotLng;
 	}
 	public Byte getSpotStatus() {
-		return spotStatus;
+	    return spotStatus;
 	}
 	public void setSpotStatus(Byte spotStatus) {
-		this.spotStatus = spotStatus;
+	    this.spotStatus = spotStatus;
 	}
 	public String getSpotDesc() {
 		return spotDesc;
