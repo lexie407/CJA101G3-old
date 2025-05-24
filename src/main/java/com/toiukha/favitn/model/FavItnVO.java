@@ -8,6 +8,11 @@ public class FavItnVO implements Serializable {
     private Integer favItnId; 
     private Integer memId;    
     
+ // 無參數建構子（必要）
+    public FavItnVO() {
+    	super();
+    }
+    
     //get,set
 	public Integer getFavItnId() {
 		return favItnId;

@@ -11,6 +11,11 @@ public class SpotImgVO implements Serializable {
     private String imgDesc;    
     private Timestamp imgTime;
     
+    // 無參數建構子
+    public SpotImgVO() {
+    	super();
+    }
+    
     //get,set
 	public Integer getImgId() {
 		return imgId;
