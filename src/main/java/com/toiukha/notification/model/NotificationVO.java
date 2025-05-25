@@ -89,6 +89,8 @@ public class NotificationVO implements java.io.Serializable {
 		this.notiSendAt = notiSendAt;
 	}
 	
+//	HAPPY
+	
 	
 	
 	
