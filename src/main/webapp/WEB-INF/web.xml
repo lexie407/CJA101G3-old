@@ -1,36 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
-	 					https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-	version="6.0" metadata-complete="false">
-	<display-name>CJA101G3</display-name>
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+	version="6.0">
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.xhtml</welcome-file>
 		<welcome-file>index.htm</welcome-file>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
-
-	<!-- 新增 SpotServlet 註冊 -->
-	<servlet>
-		<servlet-name>SpotServlet</servlet-name>
-		<servlet-class>com.toiukha.spot.controller.SpotServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>SpotServlet</servlet-name>
-		<url-pattern>/spot/SpotServlet</url-pattern>
-	</servlet-mapping>
-
-<!-- 	<error-page> -->
-<!-- 		<error-code>404</error-code> -->
-<!-- 		<location>/WEB-INF/pages/404.jsp</location> -->
-<!-- 	</error-page> -->
-<!-- 	<error-page> -->
-<!-- 		<error-code>500</error-code> -->
-<!-- 		<location>/WEB-INF/pages/500.jsp</location> -->
-<!-- 	</error-page> -->
-
-
 
 </web-app>
