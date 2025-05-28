@@ -19,6 +19,7 @@
 5. 組長負責 Review  
     Approve 允許  
     Request Changes 退回
+    *免費版：只能用留言留下意見
 6. 管理員 負責 Merge PR
 7. 若 PR 無法合併（conflict）  
     PR 發起人需再次 rebase main  
