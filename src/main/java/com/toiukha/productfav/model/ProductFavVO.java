@@ -8,7 +8,6 @@ public class ProductFavVO implements java.io.Serializable {
 	private Timestamp favAt;
 
 	public ProductFavVO() {
-		super();
 	}
 
 	public ProductFavVO(Integer memId, Integer itemId, Timestamp favAt) {
