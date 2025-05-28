@@ -15,7 +15,7 @@
     不需 push、不開 PR
 4. 若功能完成  
     commit + push  
-    再開 PR（選 main 為目標）
+    再開 PR（選 master 為目標）
 5. 組長負責 Review  
     Approve 允許  
     Request Changes 退回
