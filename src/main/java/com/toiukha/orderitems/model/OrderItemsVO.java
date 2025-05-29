@@ -1,4 +1,4 @@
-package com.toiukha.orderitems;
+package com.toiukha.orderitems.model;
 
 public class OrderItemsVO {
 	private Integer ordId; // 訂單編號
