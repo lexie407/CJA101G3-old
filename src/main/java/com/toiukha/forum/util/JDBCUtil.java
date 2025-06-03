@@ -1,5 +1,10 @@
 package com.toiukha.forum.util;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class JDBCUtil {
 	public static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
@@ -16,7 +21,34 @@ public class JDBCUtil {
 	public static final String USER = "root";
 
 	public static final String PASSWORD = "CJA10117";
-	
-	
-	
+
+	// 關閉資源
+	public static void closeConnection(Connection con, PreparedStatement pstmt, ResultSet rs) {
+		// 有連線就關閉
+		if (rs != null) {
+			try {
+				rs.close();
+			} catch (SQLException se) {
+				se.printStackTrace(System.err);
+			}
+		}
+		if (pstmt != null) {
+			try {
+				pstmt.close();
+			} catch (SQLException se) {
+				se.printStackTrace(System.err);
+			}
+		} if (con != null) {
+			try {
+				con.close();
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+			}
+		}
+	}
+
+	// 開啟連線
+	public static void closeConnection(Connection con, PreparedStatement pstmt) {
+		closeConnection(con, pstmt, null);
+	}
 }

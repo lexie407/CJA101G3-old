@@ -50,10 +50,9 @@ public class PointChangesJDBCDAO implements IPointChangesDAO {
 			return pstmt.executeUpdate();
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			closeResources(con, pstmt, null);
+			JDBCUtil.closeConnection(con, pstmt);
 		}
 		return -1; //失敗回傳-1
 	}
@@ -110,7 +109,7 @@ public class PointChangesJDBCDAO implements IPointChangesDAO {
 
 		} finally {
 			//執行closeResources方法
-			closeResources(con, pstmt, rs);
+			JDBCUtil.closeConnection(con, pstmt, rs);
 		}
 		
 		return pcv;
@@ -167,7 +166,7 @@ public class PointChangesJDBCDAO implements IPointChangesDAO {
 
 		} finally {
 			//執行closeResources方法
-			closeResources(con, pstmt, rs);
+			JDBCUtil.closeConnection(con, pstmt, rs);
 		}
 		Debug.log("找到" + pointChangesList.size() + "筆資料");
 		return pointChangesList; // 回傳結果List
@@ -179,30 +178,7 @@ public class PointChangesJDBCDAO implements IPointChangesDAO {
 		return null;
 	}
 	
-	// 關閉資源
-	private void closeResources(Connection con, PreparedStatement pstmt, ResultSet rs) {
-		// 有連線就關閉
-		if (rs != null) {
-			try {
-				rs.close();
-			} catch (SQLException se) {
-				se.printStackTrace(System.err);
-			}
-		} 
-		if (pstmt != null) {
-			try {
-				pstmt.close();
-			} catch (SQLException se) {
-				se.printStackTrace(System.err);
-			}
-		} if (con != null) {
-			try {
-				con.close();
-			} catch (Exception e) {
-				e.printStackTrace(System.err);
-			}
-		} 
-	}
+
 
 
 	// 測試用main方法

@@ -31,7 +31,7 @@ public class ArticleVO implements Serializable{
 	@Column(name = "ARTTITLE")
 	private String artTitle;
 	
-	//可能試著改用圖片轉base64的做法
+	//可能試著改用圖片轉base64的做法，或是用CKeditor
 	@Column(name = "ARTCON")
 	private String artCon;
 	
