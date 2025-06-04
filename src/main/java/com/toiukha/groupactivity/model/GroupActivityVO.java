@@ -3,21 +3,58 @@ package com.toiukha.groupactivity.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "groupactivity")
 public class GroupActivityVO implements Serializable{
+	@Id
+	@Column(name = "ACTID", updatable = false)
 	private Integer actId;
+	
+	@Column(name = "ACTNAME")
 	private String actName;
+	
+	@Column(name = "ACTDESC")
 	private String actDesc;
+	
+	@Column(name = "IMGPATH")
 	private String imgPath;
+	
+	@Column(name = "ITNID")
 	private Integer itnId;
+	
+	@Column(name = "HOSTID")
 	private Integer hostId;
+	
+	@Column(name = "SIGNUPSTART")
 	private Timestamp signupStart;
+	
+	@Column(name = "SIGNUPEND")
 	private Timestamp signupEnd;
+	
+	@Column(name = "MAXCAP")
 	private Integer maxCap;
+	
+	@Column(name = "SIGNUPCNT")
 	private Integer signupCnt;
+	
+	@Column(name = "ACTSTART")
 	private Timestamp actStart;
+	
+	@Column(name = "ACTEND")
 	private Timestamp actEnd;
+	
+	@Column(name = "ISPUBLIC")
 	private Byte isPublic;
+	
+	@Column(name = "ALLOWCANCEL")
 	private Byte allowCancel;
+	
+	@Column(name = "RECRUITSTATUS")
 	private Byte recruitStatus;
 	
 	
