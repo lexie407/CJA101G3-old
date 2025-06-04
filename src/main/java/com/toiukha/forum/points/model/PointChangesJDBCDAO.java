@@ -2,7 +2,6 @@ package com.toiukha.forum.points.model;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,16 +16,9 @@ public class PointChangesJDBCDAO implements IPointChangesDAO {
 	// SQL指令們
 	private static final String GET_ALL = "SELECT * FROM pointchanges";
 	private static final String INSERT_STMT = "INSERT INTO pointchanges (CHATIME, MEMID, AMOUNT, CHADESCRIPTION, CHACAT) VALUES ( ? , ? , ? , ? , ?)";
-	private static final String FIND_BYPRIMARYKEY = "SELECT * FROM pointchanges WHERE CHAID = ?";
+	private static final String FIND_BYCHAID = "SELECT * FROM pointchanges WHERE CHAID = ?";
 	
-	// 當類別載入時會執行這一個區塊，叫JVM載入放著驅動資訊的JDBCUtil
-	static {
-		try {
-			Class.forName(JDBCUtil.DRIVER);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+
 
 	//資料庫新增，成功會回傳1，新增時失敗回傳-1，沒有新增會傳0
 	@Override
@@ -37,7 +29,8 @@ public class PointChangesJDBCDAO implements IPointChangesDAO {
 //		ResultSet rs = null; 			// 查詢後的結果物件，這裡不是查詢指令所以不需要他
 		Debug.log("準備開始連線...");
 		try {
-			con = DriverManager.getConnection(JDBCUtil.URL, JDBCUtil.USER, JDBCUtil.PASSWORD);
+//			con = DriverManager.getConnection(JDBCUtil.URL, JDBCUtil.USER, JDBCUtil.PASSWORD);
+			con = JDBCUtil.getConnection();
 			pstmt = con.prepareStatement(INSERT_STMT);
 
 //			pstmt.setInt(1,pcv.getChaId());  		//chaId由資料庫自動生成，所以SQL指令也不用新增他
@@ -76,8 +69,9 @@ public class PointChangesJDBCDAO implements IPointChangesDAO {
 		
 		try {
 			// 建立連線，連線資料是從util的JDBCUtil叫出來，當呼叫JDBCUtil
-			con = DriverManager.getConnection(JDBCUtil.URL, JDBCUtil.USER, JDBCUtil.PASSWORD);
-			pstmt = con.prepareStatement(FIND_BYPRIMARYKEY); // 把sql指令塞給PreparedStatement
+//			con = DriverManager.getConnection(JDBCUtil.URL, JDBCUtil.USER, JDBCUtil.PASSWORD);
+			con = JDBCUtil.getConnection();
+			pstmt = con.prepareStatement(FIND_BYCHAID); // 把sql指令塞給PreparedStatement
 
 			pstmt.setInt(1, chaId);
 			
@@ -136,7 +130,8 @@ public class PointChangesJDBCDAO implements IPointChangesDAO {
 		Debug.log("準備開始連線...");
 		try {
 			// 建立連線，連線資料是從util的JDBCUtil叫出來，當呼叫JDBCUtil
-			con = DriverManager.getConnection(JDBCUtil.URL, JDBCUtil.USER, JDBCUtil.PASSWORD);
+//			con = DriverManager.getConnection(JDBCUtil.URL, JDBCUtil.USER, JDBCUtil.PASSWORD);
+			con = JDBCUtil.getConnection();
 			pstmt = con.prepareStatement(GET_ALL); // 把sql指令塞給PreparedStatement
 //			Debug.log("準備送出指令...");
 			rs = pstmt.executeQuery(); // 送出指令，回傳查詢結果

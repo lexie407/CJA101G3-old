@@ -1,11 +1,18 @@
 package com.toiukha.forum.util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class JDBCUtil {
+
+	// 當類別被載入時會執行這一個區塊，叫JVM載入放著驅動資訊的JDBCUtil
+	static {
+		try {
+			Class.forName(JDBCUtil.DRIVER);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
 	// MySQL 8.0.13以後只需保留serverTimezone設定即可
@@ -47,8 +54,13 @@ public class JDBCUtil {
 		}
 	}
 
-	// 開啟連線
+	// 關閉資源(給查詢以外的方法使用)
 	public static void closeConnection(Connection con, PreparedStatement pstmt) {
 		closeConnection(con, pstmt, null);
+	}
+
+	// 開連線
+	public static Connection getConnection() throws SQLException {
+		return DriverManager.getConnection(URL, USER, PASSWORD);
 	}
 }

@@ -5,41 +5,55 @@ import java.sql.Date;
 
 import jakarta.persistence.*;
 
+// 對應到資料表，代表是資料表中的某個欄位
 @Entity
 @Table(name = "article")
 public class ArticleVO implements Serializable{
-	
+	//	用來把序列化後的一連串序列拼回原本類別的識別ID
 	private static final long serialVersionUID = -1848561202771945566L; //序列化判斷用
-	
+
+	//  對應表格的欄位
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ARTID", updatable = false)
-	private Integer artId;
+	private Integer artId;	//文章編號
 	
 	@Column(name = "ARTCAT", nullable = false)
-	private Byte artCat;
+	private Byte artCat;		//文章類別
 	
 	@Column(name = "ARTSTA", nullable = false)
-	private Byte artSta;
+	private Byte artSta;		//文章狀態
 	
 	@Column(name = "ARTHOL", nullable = false)
-	private Integer artHol;
+	private Integer artHol;		//會員編號
 	
 	@Column(name = "ARTLIKE")
-	private Integer artLike;
+	private Integer artLike;	//文章按讚數
 	
 	@Column(name = "ARTTITLE")
-	private String artTitle;
+	private String artTitle;	//文章標題
 	
 	//可能試著改用圖片轉base64的做法，或是用CKeditor
 	@Column(name = "ARTCON")
-	private String artCon;
+	private String artCon;		//文章內容
 	
 	@Column(name = "ARTCRETIME")
-	private Date artCreTime;
+	private Date artCreTime;	//文章建立時間
 
-	public ArticleVO(Integer artId, Byte artCat, Byte artSta, Integer artHol, Integer artLike, String artTitle,
-			String artCon, Date artCreTime) {
+	//只有部分資料填入，給Insert語法用(因為部分欄位由資料庫生成)
+	public ArticleVO(Byte artCat, Byte artSta, Integer artHol
+			, String artTitle,String artCon){
+		super();
+		this.artCat = artCat;
+		this.artSta = artSta;
+		this.artHol = artHol;
+		this.artLike = 0;
+		this.artTitle = artTitle;
+		this.artCon = artCon;
+	}
+
+	public ArticleVO(Integer artId, Byte artCat, Byte artSta, Integer artHol, Integer artLike
+			, String artTitle, String artCon, Date artCreTime) {
 		super();
 		this.artId = artId;
 		this.artCat = artCat;
@@ -119,4 +133,11 @@ public class ArticleVO implements Serializable{
 		this.artCreTime = artCreTime;
 	}
 
+	// 覆寫toString方法，讓它不是回傳物件門牌，而是照我想要的方式
+	@Override
+	public String  toString() {
+		String string = getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
+		string += "[<文章編號> = " + artId + ", <文章類別> = " + artCat + ", <文章狀態> " + artSta + ", <會員編號> " + artHol + ", <文章按讚數> " + artLike + ", <文章標題> " + artTitle + ", <文章內容> = " + artCon + ", <文章建立時間> = " + artCreTime + "]";
+		return string;
+	}
 }
