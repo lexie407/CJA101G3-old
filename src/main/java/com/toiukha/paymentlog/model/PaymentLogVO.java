@@ -2,15 +2,45 @@ package com.toiukha.paymentlog.model;
 
 import java.sql.Timestamp;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "paymentlog")
 public class PaymentLogVO implements java.io.Serializable {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "payid")
 	private Integer payId; // 付款記錄編號 (PK)
+
+	@ManyToOne
+	@JoinColumn(name = "ordid", nullable = false)
 	private Integer ordId; // 訂單編號 (FK)
+
+	@ManyToOne
+	@JoinColumn(name = "memid", nullable = false)
 	private Integer memId; // 會員編號 (FK)
+
+	@ManyToOne
+	@JoinColumn(name = "couid")
 	private Integer couId; // 優惠券編號 (FK)
+
+	@Column(name = "amofin", nullable = false)
 	private Integer amoFin; // 促銷後金額 (NOT NULL)
 
+	@Column(name = "amopaid", nullable = false)
 	private Integer amoPaid; // 實際付款金額 (NOT NULL)
+
+	@Column(name = "paidat")
 	private Timestamp paidAt; // 付款時間 (DATETIME)
+
+	@Column(name = "paysta")
 	private Integer paySta; // 付款狀態 (TINYINT)
 
 	public PaymentLogVO() {

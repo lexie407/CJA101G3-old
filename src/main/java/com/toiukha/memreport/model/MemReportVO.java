@@ -2,16 +2,53 @@ package com.toiukha.memreport.model;
 
 import java.sql.Timestamp;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "memreport")
 public class MemReportVO implements java.io.Serializable {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "repid")
 	private Integer repId;
+
+	@ManyToOne
+	@JoinColumn(name = "memid", nullable = false)
 	private Integer memId;
+
+	@ManyToOne
+	@JoinColumn(name = "ordid")
 	private Integer ordId;
+
+	@ManyToOne
+	@JoinColumn(name = "itemid")
 	private Integer itemId;
+
+	@Column(name = "repreason", nullable = false, length = 200)
 	private String repReason;
+
+	@Column(name = "repstatus", nullable = false)
 	private Integer repStatus;
+
+	@Column(name = "repat", nullable = false)
 	private Timestamp repAt;
+
+	@Column(name = "repimg", columnDefinition = "longblob")
 	private byte[] repImg;
+
+	@ManyToOne
+	@JoinColumn(name = "adminid")
 	private Integer adminId;
+
+	@Column(name = "rptproctime")
 	private Timestamp rptProcTime;
 
 	public MemReportVO() {
