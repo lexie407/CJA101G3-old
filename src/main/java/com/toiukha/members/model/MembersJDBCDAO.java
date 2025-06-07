@@ -11,7 +11,7 @@ public class MembersJDBCDAO implements MembersDAO_interface {
 	String driver = "com.mysql.cj.jdbc.Driver";
 	String url = "jdbc:mysql://localhost:3306/toiukha?serverTimezone=Asia/Taipei";
 	String userid = "root";
-	String passwd = "12345678";
+	String passwd = "!jambo900";
 	
 	private static final String INSERT_STMT = "INSERT INTO members (MEMACC, MEMPWD, MEMNAME, MEMGENDER, MEMBIRTHDATE, MEMMOBILE, MEMEMAIL, MEMADDR, MEMREGTIME, MEMUPDATEDAT, MEMAVATAR, MEMUSERNAME, MEMAVATARFRAME, MEMLOGERRTIME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
