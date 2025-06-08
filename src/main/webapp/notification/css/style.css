@@ -85,15 +85,14 @@ body {
     box-shadow: 2px 0 4px var(--md-sys-color-shadow);
     padding-top: 10px;
     display: flex;
-    flex-direction: column;
-    /* justify-content: space-between; <-- 移除或調整這個屬性 */
+    flex-direction: column; /* 保持垂直排列 */
+    /* 移除 justify-content: space-between; 以免影響 flex-grow */
     flex-shrink: 0;
-    /* 固定位置 */
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
-    overflow-y: hidden; /* 移除導覽列本身的滾動條 */
+    /* 移除 overflow-y: hidden; 或 auto; 讓子元素控制滾動 */
     z-index: 1000;
 }
 
@@ -146,11 +145,12 @@ body {
     margin: 0;
     padding: 0;
     /* 讓選單內容在導覽列內部滾動 (如果內容太多) */
-    overflow-y: auto;
-    flex-grow: 1; /* 讓 ul 佔據剩餘空間，推開底部元素 */
+    overflow-y: auto; /* 保持這個，讓 ul 內部滾動 */
+    flex-grow: 1; /* 關鍵：讓 ul 佔據所有可用的剩餘空間 */
     /* 確保 ul 和下方的 bottom-notification 沒有額外的 margin-bottom */
     margin-bottom: 0; /* 確保沒有額外的下邊距 */
 }
+
 
 .left-nav li {
     margin-bottom: 5px;
@@ -180,8 +180,7 @@ body {
 .left-nav .bottom-notification {
     padding: 20px 0;
     border-top: 1px solid var(--md-sys-color-outline-variant);
-    flex-shrink: 0;
-    /* 確保 bottom-notification 和下方的 logout-area 沒有額外的 margin-bottom */
+    flex-shrink: 0; /* 確保這個區塊不會被壓縮 */
     margin-bottom: 0; /* 確保沒有額外的下邊距 */
 }
 
@@ -204,8 +203,7 @@ body {
     padding: 15px 20px;
     border-top: 1px solid var(--md-sys-color-outline-variant);
     text-align: center;
-    flex-shrink: 0;
-    /* 移除可能導致空白的 margin-top */
+    flex-shrink: 0; /* 確保這個區塊不會被壓縮 */
     margin-top: 0; /* 確保沒有額外的上邊距 */
 }
 

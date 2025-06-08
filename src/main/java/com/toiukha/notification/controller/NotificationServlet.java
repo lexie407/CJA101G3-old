@@ -175,11 +175,12 @@ public class NotificationServlet extends HttpServlet {
 			Map<String, String[]> map = req.getParameterMap();
 			
 			//查詢資料
-			NotificationService notificationService = new NotificationService();
-			List<NotificationVO> list = notificationService.getNotisByCompositeQuery(map);
+			List<NotificationVO> list = null;
+				NotificationService notificationService = new NotificationService();
+				list = notificationService.getNotisByCompositeQuery(map);
 			
 			//轉交資料
-			req.setAttribute("map", map);
+			req.getSession().setAttribute("origrnalSearchMap", map);
 			req.setAttribute("list", list);
 			RequestDispatcher dispatcher = req.getRequestDispatcher("/notification/back/notiSearch.jsp");
 			dispatcher.forward(req, res);
