@@ -3,7 +3,6 @@ package com.toiukha.spot.model;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import com.toiukha.spot.util.HibernateUtil;
 
 public class SpotService_Impl implements SpotService_interface {

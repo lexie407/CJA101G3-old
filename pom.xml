@@ -6,11 +6,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.toiukha</groupId>
-	<artifactId>CJA101G3</artifactId>
+	<artifactId>CJA101G3-old</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>CJA101G3 Maven Webapp</name>
+	<name>CJA101G3-old Maven Webapp</name>
 	<!-- FIXME change it to the project's website -->
 	<url>http://www.example.com</url>
 
@@ -69,7 +69,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>CJA101G3</finalName>
+		<finalName>CJA101G3-old</finalName>
 		<pluginManagement><!-- lock down plugins versions to avoid using Maven
 			defaults (may be moved to parent pom) -->
 			<plugins>
