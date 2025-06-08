@@ -1,25 +1,53 @@
 package com.toiukha.spot.model;
 
-import java.io.Serializable;
+import jakarta.persistence.*;
 
-public class SpotVO implements Serializable {
-//	private static final long serialVersionUID = 1L;
-
+@Entity
+@Table(name = "spot")
+public class SpotVO {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "SPOTID")
 	private Integer spotId;
+
+	@Column(name = "SPOTNAME", nullable = false, length = 100)
 	private String spotName;
+
+	@Column(name = "CRTID")
 	private Integer crtId;
+
+	@Column(name = "SPOTLOC", length = 255)
 	private String spotLoc;
+
+	@Column(name = "SPOTLAT")
 	private Double spotLat;
+
+	@Column(name = "SPOTLNG")
 	private Double spotLng;
+
+	@Column(name = "SPOTSTATUS")
 	private Byte spotStatus;
+
+	@Column(name = "SPOTDESC", length = 500)
 	private String spotDesc;
 
 	// 無參數建構子
 	public SpotVO() {
-		super();
 	}
 
-	// get,set
+	// 帶參數建構子
+	public SpotVO(String spotName, Integer crtId, String spotLoc, Double spotLat, Double spotLng, Byte spotStatus,
+			String spotDesc) {
+		this.spotName = spotName;
+		this.crtId = crtId;
+		this.spotLoc = spotLoc;
+		this.spotLat = spotLat;
+		this.spotLng = spotLng;
+		this.spotStatus = spotStatus;
+		this.spotDesc = spotDesc;
+	}
+
+	// Getter 和 Setter 方法
 	public Integer getSpotId() {
 		return spotId;
 	}
@@ -83,5 +111,4 @@ public class SpotVO implements Serializable {
 	public void setSpotDesc(String spotDesc) {
 		this.spotDesc = spotDesc;
 	}
-
 }
