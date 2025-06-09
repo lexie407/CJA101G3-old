@@ -1,0 +1,967 @@
+CREATE DATABASE IF NOT EXISTS toiukha;
+
+USE toiukha;
+
+DROP TABLE IF EXISTS articlePictures;
+DROP TABLE IF EXISTS commentreport;
+DROP TABLE IF EXISTS articlereport;
+DROP TABLE IF EXISTS articlecollection;
+DROP TABLE IF EXISTS pointchanges;
+DROP TABLE IF EXISTS exchangeItems;
+DROP TABLE IF EXISTS myItems;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS article;
+DROP TABLE IF EXISTS advertisment;
+DROP TABLE IF EXISTS sentitem;
+DROP TABLE IF EXISTS itemprice;
+DROP TABLE IF EXISTS promoprice;
+DROP TABLE IF EXISTS promo;
+DROP TABLE IF EXISTS memcoupons;
+DROP TABLE IF EXISTS coupon;
+DROP TABLE IF EXISTS productfav;
+DROP TABLE IF EXISTS paymentLog;
+DROP TABLE IF EXISTS memreport;
+DROP TABLE IF EXISTS orderItems;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS item;
+DROP TABLE IF EXISTS reportact;
+DROP TABLE IF EXISTS reportmem;
+DROP TABLE IF EXISTS participant;
+DROP TABLE IF EXISTS actitn;
+DROP TABLE IF EXISTS groupactivity;
+DROP TABLE IF EXISTS reportitn;
+DROP TABLE IF EXISTS itnspot;
+DROP TABLE IF EXISTS favitn;
+DROP TABLE IF EXISTS itinerary;
+DROP TABLE IF EXISTS favspot;
+DROP TABLE IF EXISTS spotimg;
+DROP TABLE IF EXISTS spot;
+DROP TABLE IF EXISTS notification;
+DROP TABLE IF EXISTS administrantauth;
+DROP TABLE IF EXISTS members;
+DROP TABLE IF EXISTS store;
+DROP TABLE IF EXISTS administrant;
+DROP TABLE IF EXISTS managefunction;
+
+
+CREATE TABLE IF NOT EXISTS members(
+  MEMID INT NOT NULL AUTO_INCREMENT,
+  MEMACC VARCHAR(20) NOT NULL,
+  MEMPWD VARCHAR(20) NOT NULL,
+  MEMNAME VARCHAR(20) NOT NULL,
+  MEMGENDER CHAR(1) NOT NULL CHECK (MEMGENDER IN ('M', 'F')),
+  MEMBIRTHDATE DATE NOT NULL,
+  MEMMOBILE VARCHAR(10) NOT NULL,
+  MEMEMAIL VARCHAR(100) NOT NULL,
+  MEMADDR VARCHAR(200) NOT NULL,
+  MEMREGTIME DATETIME NOT NULL,
+  MEMPOINT INT DEFAULT 0 NOT NULL,
+  MEMUPDATEDAT DATETIME,
+  MEMSTATUS TINYINT NOT NULL DEFAULT 0 CHECK (MEMSTATUS IN (0, 1, 2)),
+  MEMAVATAR LONGBLOB,
+  MEMUSERNAME VARCHAR(50) NOT NULL,
+  MEMAVATARFRAME LONGBLOB,
+  MEMLOGERRCOUNT TINYINT DEFAULT 0 NOT NULL,
+  MEMLOGERRTIME DATETIME,
+  MEMGROUPAUTH TINYINT NOT NULL DEFAULT 0 CHECK (MEMGROUPAUTH IN (0, 1)),
+  MEMGROUPPOINT TINYINT NOT NULL DEFAULT 0,
+  MEMSTOREAUTH TINYINT NOT NULL DEFAULT 0 CHECK (MEMSTOREAUTH IN (0, 1)),
+  MEMSTOREPOINT TINYINT NOT NULL DEFAULT 0,
+  CONSTRAINT PK_MEMBERS PRIMARY KEY (MEMID),
+  CONSTRAINT UQ_MEMBERS_MEMACC UNIQUE (MEMACC),
+  CONSTRAINT UQ_MEMBERS_EMAIL UNIQUE (MEMEMAIL)
+);
+
+INSERT INTO members (
+  MEMACC, MEMPWD, MEMNAME, MEMGENDER, MEMBIRTHDATE,
+  MEMMOBILE, MEMEMAIL, MEMADDR, MEMREGTIME, MEMUPDATEDAT,
+  MEMAVATAR, MEMUSERNAME, MEMAVATARFRAME, MEMLOGERRTIME
+) VALUES
+('user1', 'password1', 'Alice', 'F', '1990-01-01', '0912345678', 'alice@example.com', '台北市大安區信義路二段50號', '2023-01-01 10:00:00', '2023-01-01 10:00:00', NULL, 'alice_01', NULL, NULL),
+('user2', 'password2', 'Bob', 'M', '1985-05-23', '0923456789', 'bob@example.com', '台中市西屯區逢甲路100號', '2023-02-15 09:00:00', '2023-02-15 09:30:00', NULL, 'bob_01', NULL, NULL),
+('user3', 'password3', 'Charlie', 'M', '2000-07-10', '0934567890', 'charlie@example.com', '高雄市苓雅區中華路二段150號', '2023-03-01 08:15:00', '2023-03-01 08:45:00', NULL, 'charlie_01', NULL, NULL);
+
+
+CREATE TABLE IF NOT EXISTS store(
+  STOREID INT NOT NULL AUTO_INCREMENT,
+  STOREACC VARCHAR(20) NOT NULL,
+  STOREPWD VARCHAR(20) NOT NULL,
+  STORENAME VARCHAR(50) NOT NULL,
+  STOREGUI CHAR(8) NOT NULL,
+  STOREREP VARCHAR(20) NOT NULL,
+  STORETEL VARCHAR(20) NOT NULL,
+  STOREADDR VARCHAR(200) NOT NULL,
+  STOREFAX VARCHAR(20) NOT NULL,
+  STOREEMAIL VARCHAR(100) NOT NULL,
+  STOREREGDATE DATETIME NOT NULL,
+  STOREUPDATEDAT DATETIME,
+  STORESTATUS TINYINT NOT NULL DEFAULT 0 CHECK (STORESTATUS IN (0, 1)),
+  STOREIMG LONGBLOB,
+  CONSTRAINT PK_STORE PRIMARY KEY (STOREID),
+  CONSTRAINT UQ_STORE_STOREACC UNIQUE (STOREACC),
+  CONSTRAINT UQ_STORE_STOREEMAIL UNIQUE (STOREEMAIL),
+  CONSTRAINT UQ_STORE_STOREGUI UNIQUE (STOREGUI)
+);
+
+INSERT INTO store (
+  STOREACC, STOREPWD, STORENAME, STOREGUI, STOREREP,
+  STORETEL, STOREADDR, STOREFAX, STOREEMAIL,
+  STOREREGDATE, STOREUPDATEDAT, STOREIMG
+) VALUES
+('store1', 'pwd1', '廠商1', '12345670', '負責人1', '02-12345671', '台北市中正區中山路1號', '02-76543211', 'store1@example.com', '2023-03-15 10:45:00', NULL, NULL),
+('store2', 'pwd2', '廠商2', '12345671', '負責人2', '02-12345672', '台北市中正區中山路2號', '02-76543212', 'store2@example.com', '2023-06-01 08:20:00', NULL, NULL),
+('store3', 'pwd3', '廠商3', '12345672', '負責人3', '02-12345673', '台北市中正區中山路3號', '02-76543213', 'store3@example.com', '2023-02-10 15:00:00', NULL, NULL);
+
+
+CREATE TABLE IF NOT EXISTS administrant(
+  ADMINID INT NOT NULL AUTO_INCREMENT,
+  ADMINACC VARCHAR(20) NOT NULL,
+  ADMINPWD VARCHAR(20) NOT NULL,
+  ADMINNAME VARCHAR(20) NOT NULL,
+  ADMINCREATEDAT DATETIME NOT NULL,
+  ADMINSTATUS TINYINT NOT NULL DEFAULT 0 CHECK (ADMINSTATUS IN (0, 1)),
+  ADMINUPDATEDAT DATETIME,
+  CONSTRAINT PK_ADMINISTRANT PRIMARY KEY (ADMINID),
+  CONSTRAINT UQ_ADMINISTRANT_ADMINACC UNIQUE (ADMINACC)
+);
+
+INSERT INTO administrant (
+  ADMINACC, ADMINPWD, ADMINNAME, ADMINCREATEDAT, ADMINUPDATEDAT
+) VALUES
+('admin1', 'adminpwd1', '管理者1', '2023-01-10 09:00:00', NULL),
+('admin2', 'adminpwd2', '管理者2', '2023-01-11 09:30:00', NULL),
+('admin3', 'adminpwd3', '管理者3', '2023-01-12 10:00:00', NULL);
+
+
+CREATE TABLE IF NOT EXISTS managefunction(
+MANAGEFUNCID INT NOT NULL AUTO_INCREMENT,
+MANAGEFUNCNAME VARCHAR(50) NOT NULL,
+CONSTRAINT PK_MANAGEFUNCTION PRIMARY KEY (MANAGEFUNCID)
+);
+
+INSERT INTO managefunction (MANAGEFUNCNAME) VALUES
+('會員管理'),
+('廠商審核'),
+('商品管理');
+
+
+CREATE TABLE IF NOT EXISTS administrantauth (
+    ADMINID INT NOT NULL,
+    MANAGEFUNCID INT NOT NULL,
+    PRIMARY KEY (ADMINID, MANAGEFUNCID),
+    CONSTRAINT FK_ADMINISTRANT FOREIGN KEY (ADMINID) REFERENCES ADMINISTRANT (ADMINID),
+	CONSTRAINT FK_MANAGEFUNC FOREIGN KEY (MANAGEFUNCID) REFERENCES MANAGEFUNCTION (MANAGEFUNCID)
+);
+INSERT INTO administrantauth (ADMINID, MANAGEFUNCID) VALUES
+(1, 1),
+(2, 2), (2, 3),
+(3, 1);
+
+-- 建立 NOTIFICATION 表格
+ CREATE TABLE notification (
+  NOTIID INT AUTO_INCREMENT NOT NULL,
+  NOTITITLE VARCHAR(50) NOT NULL,
+  NOTICONT VARCHAR(500) NOT NULL,
+  NOTICREATEDAT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  MEMID INT NOT NULL,
+  NOTISTATUS TINYINT NOT NULL DEFAULT 0,
+  ADMINID INT,
+  NOTIUPDATEDAT DATETIME,
+  NOTISENDAT DATETIME NOT NULL,
+  CONSTRAINT notification_PK PRIMARY KEY (NOTIID),
+  CONSTRAINT notification_FK1 FOREIGN KEY (MEMID) REFERENCES members(MEMID),
+  CONSTRAINT notification_FK2 FOREIGN KEY (ADMINID) REFERENCES administrant(ADMINID) 
+ ) AUTO_INCREMENT = 1;
+ 
+
+ -- NOTIFICATION 表格範例資料
+ INSERT INTO notification (NOTITITLE, NOTICONT, NOTICREATEDAT, MEMID, NOTISTATUS, ADMINID, NOTISENDAT) VALUES
+  ('[系統] 系統更新通知', '親愛的會員，我們的系統將於今日凌晨進行更新，期間可能會有短暫服務中斷。', NOW(), 1, 0, NULL, '2024-05-22 09:00:00'),
+  ('[商店] 訂單出貨通知', '您的訂單 #12345 已經出貨，預計三日內送達。', NOW(), 2, 0, NULL, '2024-05-21 15:30:00'),
+  ('[系統] 帳號安全提醒', '偵測到您的帳號有異常登入嘗試，請確認您的帳號安全。', NOW(), 3, 0, NULL, '2024-05-20 18:00:00');
+  
+
+-- spot 景點
+CREATE TABLE spot (
+    SPOTID      INT AUTO_INCREMENT NOT NULL,
+    SPOTNAME    VARCHAR(255) NOT NULL,
+    CRTID       INT NOT NULL,
+    SPOTLOC     VARCHAR(255) NOT NULL,
+    SPOTLAT     DOUBLE,
+    SPOTLNG     DOUBLE,
+    SPOTSTATUS  TINYINT NOT NULL DEFAULT 0,
+    SPOTDESC    VARCHAR(500),
+    SPOTCREATEDAT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    SPOTUPDATEDAT DATETIME,
+    CONSTRAINT spot_CRTID_fk FOREIGN KEY (CRTID) REFERENCES members(MEMID), 
+    CONSTRAINT spot_SPOTID_pk PRIMARY KEY (SPOTID)
+);
+
+-- 插入 spot 景點
+INSERT INTO spot (SPOTNAME, CRTID, SPOTLOC, SPOTLAT, SPOTLNG, SPOTSTATUS, SPOTDESC)
+VALUES
+('台北101', 1, '台北市信義區', 25.033964, 121.564468, 1, '台灣著名地標'),
+('故宮博物院', 2, '台北市士林區', 25.102398, 121.548523, 1, '收藏豐富的中國文物'),
+('淡水老街', 3, '新北市淡水區', 25.179516, 121.444646, 0, '著名的老街區');
+
+-- spotimg 景點圖片
+CREATE TABLE spotimg (
+    IMGID    INT AUTO_INCREMENT NOT NULL,
+    SPOTID   INT NOT NULL,
+    IMGPATH  VARCHAR(255) NOT NULL,
+    IMGDESC  VARCHAR(255),
+    IMGTIME  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT spotimg_SPOTID_fk FOREIGN KEY (SPOTID) REFERENCES spot(SPOTID),
+    CONSTRAINT spotimg_IMGID_pk PRIMARY KEY (IMGID)
+);
+
+-- 插入 spotimg 景點圖片
+INSERT INTO spotimg (SPOTID, IMGPATH, IMGDESC)
+VALUES
+(1, '/images/taipei101_1.jpg', '台北101夜景'),
+(2, '/images/palace_1.jpg', '故宮博物院正門'),
+(3, '/images/tamsui_1.jpg', '淡水老街街景');
+
+
+-- favspot 景點收藏	
+CREATE TABLE favspot (
+    FAVSPOTID INT NOT NULL,
+    MEMID     INT NOT NULL,
+    FAVCREATEDAT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT favspot_MEMID_fk FOREIGN KEY (MEMID) REFERENCES members(MEMID),
+    CONSTRAINT favspot_FAVSPOTID_fk FOREIGN KEY (FAVSPOTID) REFERENCES spot(SPOTID),
+    CONSTRAINT favspot_pk PRIMARY KEY (FAVSPOTID, MEMID)
+);
+
+-- 插入 favspot 景點收藏	
+INSERT INTO favspot (FAVSPOTID, MEMID)
+VALUES
+(1, 1),
+(2, 2),
+(3, 3);
+
+
+-- itinerary 行程
+CREATE TABLE itinerary (
+    ITNID      INT AUTO_INCREMENT NOT NULL,
+    ITNNAME    VARCHAR(255) NOT NULL,
+    CRTID      INT NOT NULL,
+    ITNDESC    VARCHAR(500),
+    ISPUBLIC   TINYINT NOT NULL DEFAULT 0,
+    ITNSTATUS  TINYINT NOT NULL DEFAULT 0,
+    ITNCREATEDAT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ITNUPDATEDAT DATETIME,
+    CONSTRAINT itinerary_CRTID_fk FOREIGN KEY (CRTID) REFERENCES members(MEMID),
+    CONSTRAINT itinerary_ITNID_pk PRIMARY KEY (ITNID)
+);
+
+-- 插入 itinerary 行程
+INSERT INTO itinerary (ITNNAME, CRTID, ITNDESC, ISPUBLIC, ITNSTATUS)
+VALUES
+('台北一日遊', 1, '台北市區熱門景點行程', 1, 1),
+('文化之旅', 2, '探索台灣文化的行程', 0, 1),
+('美食之旅', 3, '品嚐台灣美食的行程', 1, 0);
+
+
+-- itnspot 行程景點引用表
+CREATE TABLE itnspot (
+    ITNID  INT NOT NULL,
+    SPOTID INT NOT NULL,
+    SEQUENCE INT NOT NULL DEFAULT 1,
+    CONSTRAINT itnspot_ITNID_fk FOREIGN KEY (ITNID) REFERENCES itinerary(ITNID),
+    CONSTRAINT itnspot_SPOTID_fk FOREIGN KEY (SPOTID) REFERENCES spot(SPOTID),
+    CONSTRAINT itnspot_pk PRIMARY KEY (ITNID, SPOTID)
+);
+
+-- 插入 itnspot 行程景點引用表
+INSERT INTO itnspot (ITNID, SPOTID, SEQUENCE)
+VALUES
+(1, 1, 1),
+(1, 2, 2),
+(2, 3, 1);
+
+
+-- favitn 行程收藏
+CREATE TABLE favitn (
+    FAVITNID INT NOT NULL,
+    MEMID    INT NOT NULL,
+    FAVCREATEDAT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT favitn_MEMID_fk FOREIGN KEY (MEMID) REFERENCES members(MEMID),
+    CONSTRAINT favitn_FAVITNID_fk FOREIGN KEY (FAVITNID) REFERENCES itinerary(ITNID),
+    CONSTRAINT favitn_pk PRIMARY KEY (FAVITNID, MEMID)
+);
+
+-- 插入 favitn 行程收藏
+INSERT INTO favitn (FAVITNID, MEMID)
+VALUES
+(1, 1),
+(2, 2),
+(3, 3);
+
+-- reportitn 檢舉行程
+CREATE TABLE reportitn (
+    RPTID       INT AUTO_INCREMENT NOT NULL,
+    TGTITNID    INT NOT NULL,
+    RPRID       INT NOT NULL,
+    RPTDESC     VARCHAR(255) NOT NULL,
+    RPTTIME     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    RPTSTATUS   TINYINT NOT NULL DEFAULT 0,
+    RPTPROCTIME DATETIME,
+    ADMINID     INT,
+    CONSTRAINT reportitn_TGTITNID_fk FOREIGN KEY (TGTITNID) REFERENCES itinerary(ITNID),
+    CONSTRAINT reportitn_RPRID_fk    FOREIGN KEY (RPRID)    REFERENCES members(MEMID),
+    CONSTRAINT reportitn_ADMINID_fk  FOREIGN KEY (ADMINID)  REFERENCES administrant	(ADMINID),
+    CONSTRAINT reportitn_pk PRIMARY KEY (RPTID)
+);
+
+-- 插入 reportitn 檢舉行程
+INSERT INTO reportitn (TGTITNID, RPRID, RPTDESC, RPTSTATUS, ADMINID)
+VALUES
+(1, 1, '行程內容不符', 1, 1),
+(2, 2, '景點資訊錯誤', 0, 2),
+(3, 3, '重複行程', 1, 1);
+
+-- 以下設定: 自增主鍵的起點值，也就是初始值，取值範圍是1 .. 655355 --
+set auto_increment_offset=1;
+-- 以下設定: 自增主鍵每次遞增的量，其預設值是1，取值範圍是1 .. 65535 --
+set auto_increment_increment=1; 
+CREATE TABLE groupactivity (
+	ACTID INT AUTO_INCREMENT NOT NULL,
+	ACTNAME	VARCHAR(255),
+	ACTDESC VARCHAR(255),
+    IMGPATH VARCHAR(255),
+    ITNID INT NOT NULL,
+    HOSTID INT NOT NULL,
+    SIGNUPSTART DATETIME,
+    SIGNUPEND DATETIME,
+    MAXCAP INT,
+    SIGNUPCNT INT,
+    ACTSTART DATETIME,
+    ACTEND DATETIME,
+    ISPUBLIC TINYINT,
+    ALLOWCANCEL TINYINT,
+    RECRUITSTATUS TINYINT,
+    PRIMARY KEY (ACTID),
+	FOREIGN KEY (ITNID) REFERENCES itinerary(ITNID),
+    FOREIGN KEY (HOSTID) REFERENCES members(MEMID)
+) AUTO_INCREMENT = 1;
+
+INSERT INTO groupactivity 
+		(ACTNAME, ACTDESC, ITNID, HOSTID, SIGNUPSTART, SIGNUPEND, MAXCAP, SIGNUPCNT, ACTSTART,	ACTEND, ISPUBLIC, ALLOWCANCEL, RECRUITSTATUS) 
+VALUES  ('清境農場踏青團','藍天白雲小綿羊好放鬆', 1, 1, '2025-03-04', '2025-03-09', 4, 4, '2025-05-03', '2025-05-04', 1, 0, 5 ),
+		('大甲媽祖進香團','民生地下道集合去炸轎', 2, 1, '2025-03-10', '2025-04-03', 8, 3, '2025-04-06', '2025-04-06', 1, 0, 4 ),
+        ('馬祖藍眼淚巡禮','探索海中的藍色小精靈', 3, 2, '2025-03-12', '2025-03-30', 8, 8, '2025-05-01', '2025-07-10', 1, 1, 3 ),
+        ('台中美食探險隊','為什麼太陽餅裡沒太陽', 3, 2, '2025-04-10', '2025-04-20', 6, 2, '2025-05-01', '2025-05-02', 1, 0, 2 ),
+		('台中單車旅遊團','歡迎單車夥伴逗陣來玩', 3, 2, '2025-04-10', '2025-04-20', 3, 3, '2025-06-02', '2025-06-03', 1, 1, 1 ),
+        ('台南安平探險隊','愛吃海鮮的夥伴別錯過', 3, 3, '2025-06-07', '2025-06-12', 8, 8, '2025-07-15', '2025-07-16', 1, 0, 1 ),
+        ('台南美食尋寶團','在古都裡盡情享受美食', 3, 3, '2025-05-09', '2025-08-14', 4, 2, '2025-06-17', '2025-06-17', 1, 0, 0 ),
+		('小琉球浮潛體驗','專業教練手把手帶領你', 3, 3, '2025-05-09', '2025-08-14', 8, 4, '2025-06-14', '2025-06-15', 1, 1, 0 ),
+		('小琉球生態之旅','', 2, 1, '2025-08-10', '2025-08-15', 3, 0, '2025-08-20', '2025-08-23', 0, 1, 0 ),
+		('小琉球海龜遨遊','', 2, 2, '2025-08-11', '2025-08-16', 5, 0, '2025-08-21', '2025-08-24', 0, 0, 0 );
+
+
+
+CREATE TABLE participant (
+	ACTID INT NOT NULL,
+	MEMID INT NOT NULL,
+	MEMTYPE   VARCHAR(255) DEFAULT '團員',
+	JOINTIME  DATETIME,
+	JOINSTATUS  TINYINT,
+	CONSTRAINT participant_pk PRIMARY KEY (ACTID, MEMID),
+    FOREIGN KEY (ACTID) REFERENCES groupactivity(ACTID),
+	FOREIGN KEY (MEMID) REFERENCES members(MEMID)
+);
+
+INSERT INTO participant 
+		(ACTID, MEMID, MEMTYPE, JOINTIME, JOINSTATUS) 
+VALUES  (1, 1, '團主', '2025-03-04', 1),
+		(1, 2, '團員', '2025-03-05', 1),
+		(7, 1, '團主', '2025-05-09', 1),
+		(7, 2, '團員', '2025-05-10', 0),
+		(4, 2, '團主', '2025-04-10', 1),
+		(4, 3, '團員', '2025-04-11', 0);
+
+
+
+CREATE TABLE actitn (
+	ACTID INT NOT NULL,
+	ITNID INT NOT NULL,
+	CONSTRAINT PK_ACTID_ITNID PRIMARY KEY (ACTID, ITNID),
+    FOREIGN KEY (ACTID) REFERENCES groupactivity(ACTID),
+	FOREIGN KEY (ITNID) REFERENCES itinerary(ITNID)
+);
+
+INSERT INTO actitn
+			(ACTID, ITNID) 
+VALUES  	(1, 1),
+			(2, 2),
+            (3, 3);
+
+
+
+-- 以下設定: 自增主鍵的起點值，也就是初始值，取值範圍是1 .. 655355 --
+set auto_increment_offset=1;
+-- 以下設定: 自增主鍵每次遞增的量，其預設值是1，取值範圍是1 .. 65535 --
+set auto_increment_increment=1;
+CREATE TABLE reportact (
+	RPTID INT AUTO_INCREMENT NOT NULL,
+	TGTACTID INT NOT NULL,
+	RPRID   INT NOT NULL,
+	RPRDESC  VARCHAR(255),
+	RPTTIME  DATETIME NOT NULL,
+    RPTSTATUS  TINYINT,
+    RPTPROCTIME DATETIME,
+    ADMINID INT,
+    PRIMARY KEY (RPTID),
+    FOREIGN KEY (TGTACTID) REFERENCES groupactivity(ACTID),
+	FOREIGN KEY (RPRID) REFERENCES members(MEMID),
+    FOREIGN KEY (ADMINID) REFERENCES administrant(ADMINID)
+) AUTO_INCREMENT = 1;
+
+INSERT INTO reportact 
+		(TGTACTID, RPRID, RPRDESC, RPTTIME, RPTSTATUS, RPTPROCTIME, ADMINID) 
+VALUES  (2, 1, '違法', '2025-03-10', 1, '2025-03-11', 1),
+		(2, 2, '違法', '2025-03-11', 1, '2025-03-12', 1),
+        (2, 3, '違法', '2025-03-12', 1, '2025-03-12', 1);
+
+
+
+-- 以下設定: 自增主鍵的起點值，也就是初始值，取值範圍是1 .. 655355 --
+set auto_increment_offset=1;
+-- 以下設定: 自增主鍵每次遞增的量，其預設值是1，取值範圍是1 .. 65535 --
+set auto_increment_increment=1;
+CREATE TABLE reportmem (
+	RPTID INT AUTO_INCREMENT NOT NULL,
+	TGTMEMID INT NOT NULL,
+	RPRID   INT NOT NULL,
+	RPRDESC  VARCHAR(255) NOT NULL,
+	RPTTIME  DATETIME NOT NULL,
+    RPTSTATUS  TINYINT,
+    RPTPROCTIME DATETIME,
+    ADMINID INT,
+    PRIMARY KEY (RPTID),
+    FOREIGN KEY (TGTMEMID) REFERENCES members(MEMID),
+	FOREIGN KEY (RPRID) REFERENCES members(MEMID),
+    FOREIGN KEY (ADMINID) REFERENCES administrant(ADMINID)
+) AUTO_INCREMENT = 1;
+
+INSERT INTO reportmem 
+		(TGTMEMID, RPRID, RPRDESC, RPTTIME, RPTSTATUS, RPTPROCTIME, ADMINID) 
+VALUES  (2, 1, '違法', '2025-03-10', 1, '2025-03-11', 1),
+		(2, 3, '違法', '2025-03-11', 1, '2025-03-12', 1),
+        (2, 1, '違法', '2025-03-12', 1, '2025-03-12', 1);
+        
+CREATE TABLE item (
+    ITEMID         INT AUTO_INCREMENT NOT NULL,
+    STOLD          INT NOT NULL,
+    ITEMNAME       VARCHAR(50) NOT NULL,
+    STOCKQUANTITY  INT NOT NULL,
+    ITEMSTATUS     TINYINT NOT NULL,
+    CREATETIME     DATETIME NOT NULL,
+    UPDATETIME     DATETIME NOT NULL,
+    ITEMIMG        LONGBLOB,
+    REPCOUNT       INT,
+
+    CONSTRAINT item_STOLD_FK FOREIGN KEY(STOLD) REFERENCES store(storeId),
+    CONSTRAINT ck_item_time_range CHECK (CREATETIME <= UPDATETIME),
+    CONSTRAINT ITEMID_ITEMID_PK PRIMARY KEY (ITEMID)
+);
+
+CREATE TABLE orders (
+  ORDID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  MEMID INT NOT NULL,
+  ORDSTA TINYINT,
+  CREDATE DATETIME NOT NULL,
+  CONSTRAINT FK_MEMID_Order FOREIGN KEY (MEMID) REFERENCES members (MEMID)
+);
+
+CREATE TABLE orderItems (
+  ORDID INT NOT NULL,
+  ITEMID INT NOT NULL,
+  ORDTOTAL INT NOT NULL,
+  ORIPRICE INT NOT NULL,
+  DISCPRICE INT,
+  SCORE TINYINT,
+  CONTENT VARCHAR(200),
+  PRIMARY KEY (ORDID, ITEMID),
+  CONSTRAINT FK_ORD_OrderItems FOREIGN KEY (ORDID) REFERENCES orders (ORDID),
+  CONSTRAINT FK_ITEM_OrderItems FOREIGN KEY (ITEMID) REFERENCES item(ITEMID)
+);
+
+CREATE TABLE memreport (
+  REPLID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  MEMID INT NOT NULL,
+  ORDID INT,
+  ITEMID INT,
+  REPREASON VARCHAR(200) NOT NULL,
+  REPSTATUS TINYINT NOT NULL,
+  REPAT DATETIME NOT NULL,
+  REPIMG LONGBLOB,
+  ADMINID INT,
+  RPTPROCTIME DATETIME,
+  CONSTRAINT FK_MEMID_MemReport FOREIGN KEY (MEMID) REFERENCES members (MEMID),
+  CONSTRAINT FK_ORDID_MemReport FOREIGN KEY (ORDID) REFERENCES orders (ORDID),
+  CONSTRAINT FK_ITEMID_MemReport FOREIGN KEY (ITEMID) REFERENCES item (ITEMID),
+  CONSTRAINT FK_ADMINID_MemReport FOREIGN KEY (ADMINID) REFERENCES administrant	(ADMINID)
+);
+
+CREATE TABLE coupon (
+
+  COUID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  STOREID INT NOT NULL,
+  STARTTIME DATETIME NOT NULL,
+  ENDTIME DATETIME NOT NULL,
+  DISCVALUE INT NOT NULL,
+  COUNAME VARCHAR(50) NOT NULL,
+  CONSTRAINT FK_STOREID_Coupon FOREIGN KEY (STOREID) REFERENCES store(STOREID),
+  CHECK (STARTTIME <= ENDTIME)
+);
+
+CREATE TABLE memcoupons (
+  MEMID INT NOT NULL,
+  COUID INT NOT NULL,
+  DISCTVAL INT,
+  COUPSTA TINYINT,
+  PRIMARY KEY (MEMID, COUID),
+  CONSTRAINT FK_MEMID_MemCoupons FOREIGN KEY (MEMID) REFERENCES members(MEMID),
+  CONSTRAINT FK_COUID_MemCoupons FOREIGN KEY (COUID) REFERENCES coupon(COUID)
+);
+
+CREATE TABLE paymentLog (
+  PAYID INT NOT NULL PRIMARY KEY,
+  ORDID INT NOT NULL,
+  MEMID INT NOT NULL,
+  COULD INT,
+  AMOFIN INT NOT NULL,
+  AMOPAID INT NOT NULL,
+  PAIDAT DATETIME,
+  PAYSTA TINYINT,
+  CONSTRAINT FK_MEMID_PaymentLog FOREIGN KEY (MEMID) REFERENCES members (MEMID),
+  CONSTRAINT FK_ORDID_PaymentLog FOREIGN KEY (ORDID) REFERENCES orders(ORDID)
+);
+
+CREATE TABLE productfav (
+  MEMID INT NOT NULL,
+  ITEMID INT NOT NULL,
+  FAVAT DATETIME NOT NULL,
+  PRIMARY KEY (MEMID, ITEMID),
+  CONSTRAINT FK_MEMID_ProductFav FOREIGN KEY (MEMID) REFERENCES members(MEMID),
+  CONSTRAINT FK_ITEMID_ProductFav FOREIGN KEY (ITEMID) REFERENCES item(ITEMID)
+);
+
+CREATE TABLE promo (
+    PROMOID		INT AUTO_INCREMENT NOT NULL,
+    STOREID		INT NOT NULL,
+    PROTIT		VARCHAR(50) NOT NULL,
+    STATIME		DATE NOT NULL,
+    ENDTIME		DATE NOT NULL,
+
+    CONSTRAINT promo_STOREID_FK FOREIGN KEY (STOREID) REFERENCES store(storeId),
+    CONSTRAINT PROMO_PROMOID_PK PRIMARY KEY (PROMOID)
+);
+
+CREATE TABLE promoprice (
+    PROMPRICEID    INT AUTO_INCREMENT NOT NULL,
+    ITEMID         INT NOT NULL,
+    PROID          INT NOT NULL,
+    DISCPRICE      INT NOT NULL,
+
+    CONSTRAINT promoprice_ITEMID_FK FOREIGN KEY(ITEMID) REFERENCES item(itemId),
+    CONSTRAINT promoprice_PROID_FK FOREIGN KEY(PROID) REFERENCES promo(promoId),
+    CONSTRAINT PROMOPRICEID_PROMOPRICEID_PK PRIMARY KEY (PROMPRICEID)
+);
+
+CREATE TABLE itemprice (
+    ITEMID      INT NOT NULL,
+    STARTTIME   DATETIME NOT NULL,
+    ENDTIME     DATETIME,
+    ORIPRICE    INT NOT NULL,
+
+    CONSTRAINT itemprice_ITEMID_FK FOREIGN KEY(ITEMID) REFERENCES item(itemId),
+    CONSTRAINT ck_itemprice_time_range CHECK (STARTTIME <= ENDTIME),
+    CONSTRAINT ITEMPRICE_PK PRIMARY KEY (ITEMID, STARTTIME)
+);
+CREATE TABLE sentitem (
+    SENTITEMID   INT AUTO_INCREMENT NOT NULL,
+    ITEMID       INT NOT NULL,
+    STOLD        INT NOT NULL,
+    MEMID        INT NOT NULL,
+    ITEMSTATUS   TINYINT NOT NULL,
+    SCOREMEM     TINYINT,
+    CONTENTMEM   VARCHAR(200),
+
+    CONSTRAINT sentitem_ITEMID_FK FOREIGN KEY(ITEMID) REFERENCES item(itemId),
+    CONSTRAINT sentitem_STOLD_FK FOREIGN KEY(STOLD) REFERENCES store(storeId),
+    CONSTRAINT sentitem_MEMID_FK FOREIGN KEY(MEMID) REFERENCES members(memId),
+    CONSTRAINT SENTITEMID_SENTITEMID_PK PRIMARY KEY (SENTITEMID)
+);
+CREATE TABLE advertisment (
+    ADID            INT AUTO_INCREMENT NOT NULL,
+    STOLD           INT NOT NULL,
+    ADTITLE         VARCHAR(100) NOT NULL,
+    ADIMAGE         LONGBLOB,
+    ADSTATUS        TINYINT NOT NULL,
+    ADCREATEDTIME   DATETIME NOT NULL,
+    ADSTARTTIME     DATETIME NOT NULL,
+    ADENDTIME       DATETIME NOT NULL,
+
+    CONSTRAINT advertisment_STOLD_FK FOREIGN KEY(STOLD) REFERENCES store(storeId),
+    CONSTRAINT ck_advertisment_time_range CHECK (ADSTARTTIME <= ADENDTIME),
+    CONSTRAINT ADID_ADID_PK PRIMARY KEY (ADID)
+);
+-- Item 商品
+INSERT INTO item (ITEMID, STOLD, ITEMNAME, STOCKQUANTITY, ITEMSTATUS, CREATETIME, UPDATETIME, ITEMIMG, REPCOUNT) VALUES
+(1, 1, 'Apple', 100, 1, NOW(), NOW(), NULL, 0),
+(2, 2, 'Banana', 50, 1, NOW(), NOW(), NULL, 0),
+(3, 3, 'Carrot', 30, 1, NOW(), NOW(), NULL, 0);
+
+-- Order 訂單
+INSERT INTO orders (ORDID, MEMID, ORDSTA, CREDATE) VALUES
+(1, 1, 1, NOW()),
+(2, 2, 1, NOW()),
+(3, 3, 2, NOW());
+
+-- OrderItems 訂單明細
+INSERT INTO orderItems (ORDID, ITEMID, ORDTOTAL, ORIPRICE, DISCPRICE, SCORE, CONTENT) VALUES
+(1, 1, 2, 100, 90, 5, 'Good product'),
+(1, 2, 1, 50, NULL, NULL, NULL),
+(2, 3, 3, 30, 25, 4, 'Fresh');
+
+-- MemReport 會員檢舉
+INSERT INTO memreport (REPLID, MEMID, ORDID, ITEMID, REPREASON, REPSTATUS, REPAT, REPIMG, ADMINID, RPTPROCTIME) VALUES
+(1, 1, 1, 1, 'Damaged product', 0, NOW(), NULL, NULL, NULL),
+(2, 2, 2, 3, 'Wrong item sent', 1, NOW(), NULL, 1, NOW()),
+(3, 3, 3, 2, 'Late delivery', 2, NOW(), NULL, 2, NOW());
+
+-- PaymentLog 付款紀錄
+INSERT INTO paymentlog (PAYID, ORDID, MEMID, COULD, AMOFIN, AMOPAID, PAIDAT, PAYSTA) VALUES
+(1, 1, 1, NULL, 200, 200, NOW(), 1),
+(2, 2, 2, NULL, 90, 90, NOW(), 1),
+(3, 3, 3, NULL, 75, 75, NOW(), 2);
+
+-- Coupon 優惠券
+INSERT INTO coupon (COUID, STOREID, STARTTIME, ENDTIME, DISCVALUE, COUNAME) VALUES
+(1, 1, '2025-01-01', '2025-12-31', 10, 'New Year Discount'),
+(2, 2, '2025-03-01', '2025-06-30', 15, 'Spring Sale'),
+(3, 3, '2025-07-01', '2025-09-30', 20, 'Summer Deal');
+
+-- MemCoupons 會員優惠券
+INSERT INTO memcoupons (MEMID, COUID, DISCTVAL, COUPSTA) VALUES
+(1, 1, 10, 1),
+(2, 2, 15, 0),
+(3, 3, 20, 1);
+
+-- ProductFav 商品收藏
+INSERT INTO productfav (MEMID, ITEMID, FAVAT) VALUES
+(1, 1, NOW()),
+(2, 2, NOW()),
+(3, 3, NOW());
+
+-- Promo 促銷活動
+INSERT INTO promo (PROMOID, STOREID, PROTIT, STATIME, ENDTIME) VALUES
+(1, 1, 'Winter Sale', '2025-01-01', '2025-01-31'),
+(2, 2, 'Spring Special', '2025-03-01', '2025-03-31'),
+(3, 3, 'Summer Promotion', '2025-06-01', '2025-06-30');
+
+
+-- Promoprice 促銷價
+INSERT INTO promoprice (PROMPRICEID, ITEMID, PROID, DISCPRICE) VALUES
+(1, 1, 1, 80),
+(2, 2, 2, 40),
+(3, 3, 3, 25);
+
+-- Itemprice 商品價格
+INSERT INTO itemprice (ITEMID, STARTTIME, ENDTIME, ORIPRICE) VALUES
+(1, '2025-01-01', '2025-12-31', 100),
+(2, '2025-01-01', NULL, 50),
+(3, '2025-01-01', '2025-06-30', 30);
+
+-- Sentitem 寄送商品
+INSERT INTO sentitem (SENTITEMID, ITEMID, STOLD, MEMID, ITEMSTATUS, SCOREMEM, CONTENTMEM) VALUES
+(1, 1, 1, 1, 1, 5, 'Excellent'),
+(2, 2, 2, 2, 1, 4, 'Good'),
+(3, 3, 3, 3, 2, 3, 'Average');
+
+-- Advertisment 廣告
+INSERT INTO advertisment (ADID, STOLD, ADTITLE, ADIMAGE, ADSTATUS, ADCREATEDTIME, ADSTARTTIME, ADENDTIME) VALUES
+(1, 1, 'New Year Promo', NULL, 1, NOW(), '2025-01-01', '2025-01-31'),
+(2, 2, 'Spring Sale', NULL, 1, NOW(), '2025-03-01', '2025-03-31'),
+(3, 3, 'Summer Deals', NULL, 0, NOW(), '2025-06-01', '2025-06-30');
+
+-- Point_changes點數異動(人員)
+CREATE TABLE pointchanges (
+    CHAID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    CHATIME DATETIME NOT NULL,
+    MEMID INT,
+    AMOUNT INT,
+    CHADESCRIPTION VARCHAR(300),
+    CHACAT TINYINT,
+	CONSTRAINT pointchanges_MEMID_FK FOREIGN KEY(MEMID) REFERENCES members(MEMID)
+);
+
+INSERT INTO pointchanges (CHATIME, MEMID, AMOUNT, CHADESCRIPTION, CHACAT) 
+VALUES
+	('2023-06-05 03:06:00', 2, 5, '留言增加點數', 1),
+	('2023-06-20 07:06:00', 2, 5, '留言增加點數', 1),
+	('2024-04-06 03:01:00', 2, 5, '留言增加點數', 1),
+	('2024-04-06 02:01:00', 1, 5, '留言增加點數', 1),
+	('2024-03-13 05:01:00', 1, 5, '留言增加點數', 1),
+	('2024-03-15 06:01:00', 3, 5, '留言增加點數', 1),
+	('2024-03-25 08:01:00', 1, 5, '留言增加點數', 1),
+	('2024-03-25 08:01:05', 1, 15, '留言被選為最佳解', 1),
+	('2024-03-25 08:01:10', 2, -15, '選擇出最佳留言扣除點數', 0),
+	('2024-08-24 10:45:00', 1, 5, '留言增加點數', 1),
+	('2024-08-08 08:45:00', 3, 5, '留言增加點數', 1),
+	('2024-09-13 08:51:00', 1, 5, '留言增加點數', 1),
+	('2024-09-13 08:51:05', 1, 15, '留言被選為最佳解', 1),
+	('2024-09-13 08:51:10', 2, -15, '選擇出最佳留言扣除點數', 0),
+	('2024-09-13 10:51:00', 3, 5, '留言增加點數', 1),
+	('2024-08-28 12:51:00', 2, 5, '留言增加點數', 1),
+	('2024-09-24 13:51:00', 1, 5, '留言增加點數', 1),
+	('2024-09-17 09:51:00', 3, 5, '留言增加點數', 1),
+	('2024-04-07 13:17:00', 2, 5, '留言增加點數', 1),
+	('2024-04-06 16:17:00', 1, 5, '留言增加點數', 1),
+	('2024-04-06 16:17:05', 1, 15, '留言被選為最佳解', 1),
+	('2024-04-06 16:17:10', 3, -15, '選擇出最佳留言扣除點數', 0),
+	('2025-02-13 00:34:00', 2, 5, '留言增加點數', 1),
+	('2023-11-05 03:39:00', 3, 5, '留言增加點數', 1),
+	('2023-11-24 23:39:00', 2, 5, '留言增加點數', 1),
+	('2023-11-19 23:39:00', 3, 5, '留言增加點數', 1),
+	('2023-11-06 21:39:00', 3, 5, '留言增加點數', 1),
+	('2023-11-10 06:39:00', 1, 5, '留言增加點數', 1),
+	('2023-03-19 10:42:00', 2, 5, '留言增加點數', 1),
+	('2023-03-19 10:42:05', 3, 15, '留言被選為最佳解', 1),
+	('2023-03-19 10:42:10', 2, -15, '選擇出最佳留言扣除點數', 0),
+	('2023-03-17 10:42:00', 1, 5, '留言增加點數', 1),
+	('2023-04-06 06:42:00', 3, 5, '留言增加點數', 1),
+	('2023-05-23 22:56:00', 2, 30, '發表一般文章增加點數', 1),
+	('2024-03-08 00:51:00', 2, 10, '發表發問文章增加點數', 1),
+	('2024-07-28 06:35:00', 1, 30, '發表一般文章增加點數', 1),
+	('2024-08-26 08:41:00', 2, 10, '發表發問文章增加點數', 1),
+	('2024-03-08 10:07:00', 3, 10, '發表發問文章增加點數', 1),
+	('2023-04-05 11:56:00', 3, 30, '發表一般文章增加點數', 1),
+	('2025-01-17 14:24:00', 2, 30, '發表一般文章增加點數', 1),
+	('2023-10-28 20:29:00', 2, 30, '發表一般文章增加點數', 1),
+	('2023-03-13 01:32:00', 2, 10, '發表發問文章增加點數', 1),
+	('2025-06-06 03:14:00', 2, 30, '發表一般文章增加點數', 1),
+	('2025-05-20 00:00:00', 2, -50, '兌換商品：日落金邊頭像框', 0),
+	('2025-05-20 00:00:00', 2, -10, '兌換商品：山嶺之星徽章', 0),
+	('2025-05-20 00:00:00', 3, -10, '兌換商品：山嶺之星徽章', 0),
+	('2025-05-20 00:00:00', 3, -30, '兌換商品：藍色水晶徽章', 0),
+	('2025-05-20 00:00:00', 3, -30, '兌換商品：藍色水晶徽章', 0),
+	('2025-05-20 00:00:00', 1, -10, '兌換商品：山嶺之星徽章', 0),
+	('2025-05-20 00:00:00', 1, -10, '兌換商品：山嶺之星徽章', 0),
+	('2025-05-20 00:00:00', 1, -30, '兌換商品：藍色水晶徽章', 0),
+	('2025-05-20 00:00:00', 1, -10, '兌換商品：山嶺之星徽章', 0),
+	('2025-05-20 00:00:00', 1, -10, '兌換商品：山嶺之星徽章', 0),
+	('2025-05-20 00:00:00', 3, -10, '兌換商品：山嶺之星徽章', 0),
+	('2025-05-20 00:00:00', 1, -30, '兌換商品：藍色水晶徽章', 0),
+	('2025-05-20 00:00:00', 2, -30, '兌換商品：藍色水晶徽章', 0);
+
+-- ExchangeItems點數可兌換商品(人員)
+CREATE TABLE exchangeItems (
+	ITEMID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ITEMNAME VARCHAR(20) NOT NULL,
+    AMOUNT INT NOT NULL,
+    BEGINDATE DATE,
+    ENDDATE DATE,
+    ITEMCAT TINYINT,
+    ITEMIMG LONGBLOB
+);
+
+
+INSERT INTO exchangeitems (ITEMID, ITEMNAME, AMOUNT, BEGINDATE, ENDDATE, ITEMCAT, ITEMIMG)  --   圖片先不匯入
+VALUES
+	(1, '山嶺之星徽章', 10, '2023-11-01', '2025-12-31', 1, NULL),
+	(2, '藍色水晶徽章', 30, '2025-05-19', '2025-08-28', 1, NULL),
+	(3, '日落金邊頭像框', 50, '2025-04-01', '2025-08-30', 2, NULL);
+
+-- MyItems我的兌換品項(人員)
+CREATE TABLE myItems(
+	MEMID INT NOT NULL,
+    ITEMID INT NOT NULL,
+    EXCDATE DATE,
+    ITEMUSED BOOLEAN DEFAULT FALSE,
+    CONSTRAINT myItems_MEMID_FK FOREIGN KEY(memid) REFERENCES members(memid),
+	CONSTRAINT myItems_PRIMARY_KEY PRIMARY KEY (memid, itemid)
+);
+
+INSERT INTO myitems (MEMID, ITEMID, EXCDATE, ITEMUSED) 
+VALUES
+	(2, 3, '2025-05-20', True),
+	(2, 1, '2025-05-20', False),
+	(3, 2, '2025-05-20', False),
+	(3, 1, '2025-05-20', False),
+	(1, 2, '2025-05-20', False),
+	(1, 1, '2025-05-20', False);
+
+
+
+/* ============================ --
+-- =======    討論區    ======= --
+-- ============================ */
+
+-- 文章	（討論區）
+CREATE TABLE article(
+	ARTID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ARTCAT TINYINT NOT NULL,	-- 1：文章 2：發問中 3：已解決"
+    ARTSTA TINYINT NOT NULL,	-- 1：上架 2：下架
+    ARTHOL INT NOT NULL,
+    ARTLIKE INT DEFAULT 0,
+    ARTTITLE VARCHAR(30),
+    ARTCON VARCHAR(4000),
+    ARTCRETIME DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT article_ARTHOL_FK FOREIGN KEY(arthol) REFERENCES members(memid)
+);
+
+INSERT INTO article 
+VALUES
+	(NULL, 1, 1, 1, 500, "[南投]草屯長疆炭燒羊肉爐", "草屯長疆炭燒羊肉爐，google評論寫老闆娘親切，而且對待外地的學生很好，而且還請我們吃很多東西，真的很感動，沒有遇過這樣良心的店家!<br> 雖然現在狀態是暫時停業中……", '2025-06-10 13:58:03'),
+    (NULL, 2, 1, 3, 900, "北投溫泉旅館求推薦!", "下個月想跟家人一起去北投泡溫泉，想問有沒有推薦的溫泉旅館?預算300塊，但住得習慣會打5星好評，拜託大家了!!!!!!急!!!!!", '2023-10-10 10:37:02');
+-- 測試CURRENT_DATE值
+INSERT INTO article  (ARTCAT,ARTSTA,ARTHOL,ARTTITLE,ARTCON) 
+VALUES 
+	(1, 1, 2,  "[交通攻略]要怎麼去九份呢~九份交通懶人包", "從台北車站出發，搭乘火車至「瑞芳火車站」，轉搭台灣好行-黃金福隆線至九份站下。或是從瑞芳火車站用竹蜻蜓飛過去");
+INSERT INTO article (ARTID, ARTCAT, ARTSTA, ARTHOL, ARTLIKE, ARTTITLE, ARTCON, ARTCRETIME) 
+VALUES
+	(4, 1, 1, 2, 57, '私房景點推薦：橘子山夜拍星空', '如果你喜歡夜拍星空行程，又不想人擠人，那橘子山真的可以列入考慮！清幽又放鬆，是我最近的愛。', '2023-05-23 23:06:00'),
+	(5, 2, 2, 2, 151, '霧嶼適合賞花嗎？', '想問一下，近期有人安排霧嶼賞花的嗎？交通會不會很麻煩？住宿方便嗎？還是有其他更推薦的地點？', '2024-03-08 01:01:00'),
+	(6, 1, 1, 1, 6, '忘憂谷的泡溫泉體驗超出預期！', '原本只是想隨便走走，沒想到忘憂谷的泡溫泉體驗這麼棒，有驚喜。當天拍了很多照片，推薦給想短暫放空的朋友。', '2024-07-28 06:45:00'),
+	(7, 2, 1, 2, 114, '請問有人最近去過藍月吊橋露營嗎？', '最近在規劃行程，發現有人提過藍月吊橋適合露營，但資料好少QQ 有去過的大大歡迎分享心得！', '2024-08-26 08:51:00'),
+	(8, 2, 1, 3, 178, '推薦北山村泡溫泉行程嗎？', '小弟旅遊新手，最近想找地方泡溫泉放鬆一下，有看到北山村但怕踩雷，求老手們解惑！', '2024-03-08 10:17:00'),
+	(9, 1, 2, 3, 26, '私房景點推薦：忘憂谷老街巡禮', '如果你喜歡老街巡禮行程，又不想人擠人，那忘憂谷真的可以列入考慮！清幽又放鬆，是我最近的愛。', '2023-04-05 12:06:00'),
+	(10, 1, 1, 2, 11, '私房景點推薦：霧嶼露營', '如果你喜歡露營行程，又不想人擠人，那霧嶼真的可以列入考慮！清幽又放鬆，是我最近的愛。', '2025-01-17 14:34:00'),
+	(11, 1, 2, 2, 141, '私房景點推薦：藍月吊橋夜拍星空', '如果你喜歡夜拍星空行程，又不想人擠人，那藍月吊橋真的可以列入考慮！清幽又放鬆，是我最近的愛。', '2023-10-28 20:39:00'),
+	(12, 2, 1, 2, 180, '推薦霧嶼散步行程嗎？', '小弟旅遊新手，最近想找地方散步放鬆一下，有看到霧嶼但怕踩雷，求老手們解惑！', '2023-03-13 01:42:00'),
+	(13, 1, 1, 2, 59, '北山村的老街巡禮體驗超出預期！', '原本只是想隨便走走，沒想到北山村的老街巡禮體驗這麼棒，有驚喜。當天拍了很多照片，推薦給想短暫放空的朋友。', '2025-06-06 03:24:00');
+
+
+-- 留言（討論區）
+CREATE TABLE comments(
+	COMMID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 		-- 留言編號
+    COMMCAT TINYINT NOT NULL, 								-- 留言類別 1.文章留言 2.問題回答
+    COMMSTA TINYINT NOT NULL DEFAULT 1, 					-- 留言狀態 1：上架 2：下架 3：最佳回答(上架) 
+    COMMHOL INT NOT NULL, 									-- 會員編號 FK
+    COMMART INT NOT NULL, 									-- 所屬文章 Fk
+    COMMLIKE INT NOT NULL DEFAULT 0,						-- 留言按讚數
+    COMMCON VARCHAR(150) NOT NULL,							-- 留言內容
+    COMMCRETIME DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,	-- 留言建立時間
+    COMMIMG LONGBLOB, 										-- 留言圖片
+    CONSTRAINT comments_COMMHOL_FK FOREIGN KEY (COMMHOL) REFERENCES members(memid),
+    CONSTRAINT comments_COMMARTL_FK FOREIGN KEY (COMMART) REFERENCES article(ARTID)
+);
+
+INSERT INTO comments (COMMCAT, COMMHOL, COMMART, COMMCON, COMMIMG)
+VALUES 
+	(1, 3, 1, "有夠讚", NULL),
+    (2, 1, 1, "先簽樂透，等中了之後再報名旅行團", NULL);
+INSERT INTO comments (COMMID, COMMCAT, COMMSTA, COMMHOL, COMMART, COMMLIKE, COMMCON, COMMCRETIME, COMMIMG) 
+VALUES
+	(3, 1, 1, 2, 4, 8, '有點觀光化了，不過還算值得一遊啦。', '2023-06-05 03:06:00', NULL),
+	(4, 1, 1, 3, 4, 20, '我去的時候人超多，建議避開假日。', '2023-06-20 07:06:00', NULL),
+	(5, 2, 1, 3, 5, 38, '我之前也去過，很推！風景真的不錯，適合放鬆～', '2024-04-06 03:01:00', NULL),
+	(6, 2, 1, 1, 5, 33, '我之前也去過，很推！風景真的不錯，適合放鬆～', '2024-04-06 02:01:00', NULL),
+	(7, 2, 1, 3, 5, 95, '如果想拍照，建議早上或黃昏去，光線很漂亮！', '2024-03-13 05:01:00', NULL),
+	(8, 2, 1, 3, 5, 36, '如果想拍照，建議早上或黃昏去，光線很漂亮！', '2024-03-15 06:01:00', NULL),
+	(9, 2, 3, 1, 5, 26, '記得準備防蚊液，當地蚊蟲不少哈哈。', '2024-03-25 08:01:00', NULL),
+	(10, 1, 1, 3, 6, 11, '我去的時候人超多，建議避開假日。', '2024-08-24 10:45:00', NULL),
+	(11, 1, 1, 3, 6, 5, '我之前也去過，很推！風景真的不錯，適合放鬆～', '2024-08-08 08:45:00', NULL),
+	(12, 2, 3, 3, 7, 9, '有點觀光化了，不過還算值得一遊啦。', '2024-09-13 08:51:00', NULL),
+	(13, 2, 1, 3, 7, 47, '如果想拍照，建議早上或黃昏去，光線很漂亮！', '2024-09-13 10:51:00', NULL),
+	(14, 2, 1, 2, 7, 55, '有點觀光化了，不過還算值得一遊啦。', '2024-08-28 12:51:00', NULL),
+	(15, 2, 1, 1, 7, 46, '我之前也去過，很推！風景真的不錯，適合放鬆～', '2024-09-24 13:51:00', NULL),
+	(16, 2, 1, 3, 7, 26, '有點觀光化了，不過還算值得一遊啦。', '2024-09-17 09:51:00', NULL),
+	(17, 2, 1, 2, 8, 79, '有點觀光化了，不過還算值得一遊啦。', '2024-04-07 13:17:00', NULL),
+	(18, 2, 3, 2, 8, 20, '有點觀光化了，不過還算值得一遊啦。', '2024-04-06 16:17:00', NULL),
+	(19, 1, 1, 2, 10, 42, '我去的時候人超多，建議避開假日。', '2025-02-13 00:34:00', NULL),
+	(20, 1, 1, 3, 11, 60, '有點觀光化了，不過還算值得一遊啦。', '2023-11-05 03:39:00', NULL),
+	(21, 1, 1, 2, 11, 44, '記得準備防蚊液，當地蚊蟲不少哈哈。', '2023-11-24 23:39:00', NULL),
+	(22, 1, 1, 3, 11, 28, '我之前也去過，很推！風景真的不錯，適合放鬆～', '2023-11-19 23:39:00', NULL),
+	(23, 1, 1, 3, 11, 51, '記得準備防蚊液，當地蚊蟲不少哈哈。', '2023-11-06 21:39:00', NULL),
+	(24, 1, 1, 2, 11, 98, '記得準備防蚊液，當地蚊蟲不少哈哈。', '2023-11-10 06:39:00', NULL),
+	(25, 2, 3, 3, 12, 14, '記得準備防蚊液，當地蚊蟲不少哈哈。', '2023-03-19 10:42:00', NULL),
+	(26, 2, 1, 1, 12, 33, '我之前也去過，很推！風景真的不錯，適合放鬆～', '2023-03-17 10:42:00', NULL),
+	(27, 2, 1, 3, 12, 55, '記得準備防蚊液，當地蚊蟲不少哈哈。', '2023-04-06 06:42:00', NULL);
+    
+-- ArticleCollection文章收藏（討論區）
+CREATE TABLE articlecollection (
+    MEMID INT NOT NULL,
+    ARTID INT NOT NULL,
+    COLTIME DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (MEMID, ARTID),
+    CONSTRAINT fk_ac_member FOREIGN KEY (MEMID) REFERENCES members(MEMID),
+    CONSTRAINT fk_ac_article FOREIGN KEY (ARTID) REFERENCES article(ARTID)
+);
+
+INSERT INTO articlecollection (MEMID, ARTID, COLTIME)
+VALUES
+	(1, 4, '2023-05-25 23:06:00'),
+	(3, 4, '2023-06-04 23:06:00'),
+	(2, 8, '2024-03-09 10:17:00'),
+	(2, 9, '2023-04-10 12:06:00'),
+	(1, 10, '2025-01-24 14:34:00'),
+	(2, 10, '2025-02-01 14:34:00'),
+	(3, 11, '2023-11-17 20:39:00'),
+	(1, 11, '2023-11-01 20:39:00'),
+	(3, 12, '2023-03-17 01:42:00');
+
+-- ArticleReport文章檢舉（討論區）
+CREATE TABLE articlereport (
+    ARTREPID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    MEMID INT NOT NULL,
+    ARTID INT NOT NULL,
+    REPCAT VARCHAR(30) NOT NULL,
+    REPDES VARCHAR(300),
+    REPSTA TINYINT NOT NULL COMMENT '0=待處理, 1=檢舉通過, 2=檢舉未通過',
+    REPTIME DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    REVTIME DATETIME NOT NULL,
+    REMARK VARCHAR(300),
+    CONSTRAINT fk_ar_member FOREIGN KEY (MEMID) REFERENCES members(MEMID),
+    CONSTRAINT fk_ar_article FOREIGN KEY (ARTID) REFERENCES article(ARTID)
+);
+
+INSERT INTO articlereport (ARTREPID, MEMID, ARTID, REPCAT, REPDES, REPSTA, REPTIME, REVTIME, REMARK) 
+VALUES
+    (1, 1, 5, '內容不當', '文章內容疑似違規', 2, '2024-03-13 01:01:00', '2024-03-15 01:01:00', '檢舉未通過'),
+    (2, 1, 5, '內容不當', '文章內容疑似違規', 2, '2024-03-13 01:01:00', '2024-03-15 01:01:00', '檢舉未通過'),
+    (3, 2, 7,  '內容不當', '文章內容疑似違規', 2, '2024-08-31 08:51:00', '2024-09-02 08:51:00', '檢舉未通過'),
+    (4, 3, 8, '內容不當', '文章內容疑似違規', 2, '2024-03-13 10:17:00', '2024-03-15 10:17:00', '檢舉未通過'),
+    (5, 2, 9, '內容不當', '文章內容疑似違規', 1, '2023-04-10 12:06:00', '2023-04-12 12:06:00', '管理員審核完成'),
+    (6, 1, 11, '內容不當', '文章內容疑似違規', 2, '2023-11-02 20:39:00', '2023-11-04 20:39:00', '檢舉未通過'),
+    (7, 2, 11, '內容不當', '文章內容疑似違規', 2, '2023-11-02 20:39:00', '2023-11-04 20:39:00', '檢舉未通過'),
+    (8, 1, 12, '內容不當', '文章內容疑似違規', 2, '2023-03-18 01:42:00', '2023-03-20 01:42:00', '檢舉未通過'),
+    (9, 3, 12, '內容不當', '文章內容疑似違規', 2, '2023-03-18 01:42:00', '2023-03-20 01:42:00', '檢舉未通過');
+
+
+-- CommentReport 留言檢舉（討論區）
+CREATE TABLE commentreport (
+    COMMREPID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    MEMID INT NOT NULL,
+    COMMID INT NOT NULL,
+    REPCAT VARCHAR(30) NOT NULL,
+    REPDES VARCHAR(300),
+    RPTSTA TINYINT NOT NULL COMMENT '0=待處理, 1=檢舉通過, 2=檢舉未通過',
+    REPTIME DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    REVTIME DATETIME NOT NULL,
+    REMARKS VARCHAR(300),
+    CONSTRAINT fk_cr_member FOREIGN KEY (MEMID) REFERENCES members(MEMID),
+    CONSTRAINT fk_cr_comment FOREIGN KEY (COMMID) REFERENCES comments(COMMID)
+);
+
+INSERT INTO commentreport (COMMREPID, MEMID, COMMID, REPCAT, REPDES, RPTSTA, REPTIME, REVTIME, REMARKS) 
+VALUES
+	(1, 3, 7, '內容引戰', '請注意言詞', 2, '2024-03-16 05:01:00', '2024-03-18 05:01:00', '審核備註');
+
+
+-- ArticlePictures 文章圖片表
+CREATE TABLE articlepictures (
+    PICID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,   -- 圖片編號
+    ARTID INT NOT NULL,                              -- 所屬文章編號
+    PICTURE LONGBLOB,                                -- 圖片資料
+    CONSTRAINT fk_picture_article FOREIGN KEY (ARTID) REFERENCES article(ARTID)
+);
+
+INSERT INTO articlepictures (PICID, ARTID, PICTURE) VALUES
+(1, 4, NULL),
+(2, 5, NULL),
+(3, 6, NULL);

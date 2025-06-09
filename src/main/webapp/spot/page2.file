@@ -1,0 +1,19 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    // rowsPerPage, pageIndex, whichPage, pageNumber 需在 page1.jsp 已宣告
+%>
+<% if (rowsPerPage < rowNumber) { %>
+    <% if (pageIndex >= rowsPerPage) { %>
+        <a href="?whichPage=1">至第一頁</a>
+        <a href="?whichPage=<%= whichPage - 1 %>">上一頁</a>
+    <% } %>
+    <% if (pageIndex + rowsPerPage < rowNumber) { %>
+        <a href="?whichPage=<%= whichPage + 1 %>">下一頁</a>
+        <a href="?whichPage=<%= pageNumber %>">至最後一頁</a>
+    <% } %>
+<% } %>
+<% if (pageNumber > 1) { %>
+    <% for (int i = 1; i <= pageNumber; i++) { %>
+        <a href="?whichPage=<%= i %>">跳至第<%= i %>頁</a>
+    <% } %>
+<% } %>

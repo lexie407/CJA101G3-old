@@ -1,9 +1,14 @@
 package com.toiukha.hibernate;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 
 public class HibernateUtil {
 	
@@ -32,36 +37,44 @@ public class HibernateUtil {
 	//@throws ExceptionInInitializerError 如果 SessionFactory 建立失敗
 	private static SessionFactory createSessionFactory() {
 		try {
+			// 載入 config.properties
+			Properties props = new Properties();
+			InputStream inputStream = HibernateUtil.class.getClassLoader().getResourceAsStream("config.properties");
+			if (inputStream == null) {
+				throw new RuntimeException("無法找到 config.properties");
+			}
+			props.load(inputStream);
 			
-			// 1. 建立 StandardServiceRegistry
-            // StandardServiceRegistry 是 Hibernate 5.x 之後用於管理各種服務的核心組件。
-            // .configure() 會自動載入 classpath 根目錄下的 hibernate.cfg.xml 設定檔。
-            // .build() 則根據配置檔建立並返回服務註冊表。
+			// 建立 Hibernate 配置
+			Configuration configuration = new Configuration();
+			configuration.setProperty("hibernate.connection.driver_class", props.getProperty("jdbc.driver"));
+			configuration.setProperty("hibernate.connection.url", props.getProperty("jdbc.url"));
+			configuration.setProperty("hibernate.connection.username", props.getProperty("jdbc.user"));
+			configuration.setProperty("hibernate.connection.password", props.getProperty("jdbc.password"));
+			configuration.setProperty("hibernate.dialect", props.getProperty("hibernate.dialect"));
+			configuration.setProperty("hibernate.show_sql", props.getProperty("hibernate.show_sql"));
+			configuration.setProperty("hibernate.format_sql", props.getProperty("hibernate.format_sql"));
+			configuration.setProperty("hibernate.hbm2ddl.auto", props.getProperty("hibernate.hbm2ddl.auto"));
+			
+			// 建立服務註冊表
 			registry = new StandardServiceRegistryBuilder()
-					.configure()
+					.applySettings(configuration.getProperties())
 					.build();
 			
-			// 2. 根據服務註冊表建立 SessionFactory
-            // MetadataSources 負責從配置檔中讀取實體映射元數據 (如 @Entity, @Table 等)。
-            // .buildMetadata() 構建元數據模型。
-            // .buildSessionFactory() 最終使用這些元數據和服務註冊表來建立 SessionFactory 實例。
+			// 建立 SessionFactory
 			SessionFactory sessionFactory = new MetadataSources(registry)
 					.buildMetadata()
 					.buildSessionFactory();
 			
 			return sessionFactory;
 			
-		} catch (Exception e) {
-			
-			// 捕獲在建立 SessionFactory 過程中可能發生的任何異常。
-			// 列印堆疊追蹤，便於除錯。
+		} catch (IOException e) {
 			e.printStackTrace();
-			// 拋出 ExceptionInInitializerError，表示在靜態初始化塊中發生了異常，
-            // 通常是因為配置錯誤或資料庫連線問題。
 			throw new ExceptionInInitializerError(e);
-			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
 		}
-		
 	}
 	
 	//關閉 SessionFactory 並銷毀服務註冊表。

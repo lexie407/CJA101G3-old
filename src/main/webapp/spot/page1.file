@@ -1,0 +1,40 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%
+	int rowsPerPage = 5; // 每頁顯示幾筆景點資料
+	int rowNumber = list.size(); // 總筆數
+	int pageNumber = 0; // 總頁數
+	int whichPage = 1; // 目前第幾頁
+	int pageIndexArray[] = null;
+	int pageIndex = 0;
+
+	// 計算總頁數
+	if (rowNumber % rowsPerPage != 0)
+    	pageNumber = rowNumber / rowsPerPage + 1;
+	else
+    	pageNumber = rowNumber / rowsPerPage;
+
+	// 每頁的起始索引
+	pageIndexArray = new int[pageNumber];
+	for (int i = 1; i <= pageIndexArray.length; i++)
+    	pageIndexArray[i - 1] = i * rowsPerPage - rowsPerPage;
+
+	// 取得目前頁數
+	try {
+    	whichPage = Integer.parseInt(request.getParameter("whichPage"));
+    	pageIndex = pageIndexArray[whichPage - 1];
+	} catch (NumberFormatException e) { // 第一次進來
+    	whichPage = 1;
+    	pageIndex = 0;
+	} catch (ArrayIndexOutOfBoundsException e) { // 頁數超出範圍
+    	if (pageNumber > 0) {
+       	 whichPage = pageNumber;
+       	 pageIndex = pageIndexArray[pageNumber - 1];
+    	}
+	}
+%>
+
+<% if (pageNumber > 0) { %>
+    第<%= whichPage %>/<%= pageNumber %>頁
+<% } %>
+● 符合查詢條件如下所示：共<%= rowNumber %>筆
