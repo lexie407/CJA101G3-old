@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	//綁定返回按鈕
 	let backBtn = document.getElementById("backToAdminNotificationsBtn");
 	backBtn.addEventListener("click", function(){
-		
+		history.back();
 	})
 
 });
