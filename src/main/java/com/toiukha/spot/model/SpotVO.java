@@ -10,13 +10,13 @@ public class SpotVO {
 	@Column(name = "SPOTID")
 	private Integer spotId;
 
-	@Column(name = "SPOTNAME", nullable = false, length = 100)
+	@Column(name = "SPOTNAME", nullable = false, length = 255)
 	private String spotName;
 
-	@Column(name = "CRTID")
+	@Column(name = "CRTID", nullable = false)
 	private Integer crtId;
 
-	@Column(name = "SPOTLOC", length = 255)
+	@Column(name = "SPOTLOC", nullable = false, length = 255)
 	private String spotLoc;
 
 	@Column(name = "SPOTLAT")
@@ -25,14 +25,16 @@ public class SpotVO {
 	@Column(name = "SPOTLNG")
 	private Double spotLng;
 
-	@Column(name = "SPOTSTATUS")
-	private Byte spotStatus;
+	@Column(name = "SPOTSTATUS", nullable = false)
+	private Byte spotStatus = 0; // 設定預設值
 
 	@Column(name = "SPOTDESC", length = 500)
 	private String spotDesc;
 
 	// 無參數建構子
 	public SpotVO() {
+		// 確保預設值
+		this.spotStatus = 0;
 	}
 
 	// 帶參數建構子
@@ -43,7 +45,7 @@ public class SpotVO {
 		this.spotLoc = spotLoc;
 		this.spotLat = spotLat;
 		this.spotLng = spotLng;
-		this.spotStatus = spotStatus;
+		this.spotStatus = spotStatus != null ? spotStatus : 0;
 		this.spotDesc = spotDesc;
 	}
 
@@ -101,7 +103,7 @@ public class SpotVO {
 	}
 
 	public void setSpotStatus(Byte spotStatus) {
-		this.spotStatus = spotStatus;
+		this.spotStatus = spotStatus != null ? spotStatus : 0;
 	}
 
 	public String getSpotDesc() {
@@ -110,5 +112,19 @@ public class SpotVO {
 
 	public void setSpotDesc(String spotDesc) {
 		this.spotDesc = spotDesc;
+	}
+
+	@Override
+	public String toString() {
+		return "SpotVO{" +
+				"spotId=" + spotId +
+				", spotName='" + spotName + '\'' +
+				", crtId=" + crtId +
+				", spotLoc='" + spotLoc + '\'' +
+				", spotLat=" + spotLat +
+				", spotLng=" + spotLng +
+				", spotStatus=" + spotStatus +
+				", spotDesc='" + spotDesc + '\'' +
+				'}';
 	}
 }

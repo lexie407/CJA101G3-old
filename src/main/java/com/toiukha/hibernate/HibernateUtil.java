@@ -9,6 +9,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import com.toiukha.spot.model.SpotVO;
 
 public class HibernateUtil {
 	
@@ -61,8 +62,9 @@ public class HibernateUtil {
 					.applySettings(configuration.getProperties())
 					.build();
 			
-			// 建立 SessionFactory
+			// 建立 SessionFactory 並添加實體類映射
 			SessionFactory sessionFactory = new MetadataSources(registry)
+					.addAnnotatedClass(SpotVO.class)
 					.buildMetadata()
 					.buildSessionFactory();
 			

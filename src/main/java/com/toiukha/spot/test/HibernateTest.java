@@ -1,10 +1,12 @@
 package com.toiukha.spot.test;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import com.toiukha.spot.util.HibernateUtil;
+
+import com.toiukha.hibernate.HibernateUtil;
 import com.toiukha.spot.model.SpotVO;
-import java.util.List;
 
 public class HibernateTest {
     public static void main(String[] args) {

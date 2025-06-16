@@ -8,10 +8,12 @@
     <param-value>/CJA101G3-old</param-value>
   </context-param>
   
-  <!-- Hibernate 監聽器 -->
+  <!-- Hibernate 監聽器 (暫時禁用解決啟動問題) -->
+  <!--
   <listener>
     <listener-class>com.toiukha.hibernate.InitializerListener</listener-class>
   </listener>
+  -->
   
   <!-- JSP 配置 -->
   <jsp-config>
@@ -29,13 +31,35 @@
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
   
+  <!-- Servlet 配置 -->
   <servlet>
     <servlet-name>SpotServlet</servlet-name>
     <servlet-class>com.toiukha.spot.controller.SpotServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>TestServlet</servlet-name>
+    <servlet-class>com.toiukha.test.TestServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>SimpleSpotServlet</servlet-name>
+    <servlet-class>com.toiukha.test.SimpleSpotServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
     <servlet-name>SpotServlet</servlet-name>
     <url-pattern>/spot/SpotServlet</url-pattern>
   </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>TestServlet</servlet-name>
+    <url-pattern>/test</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>SimpleSpotServlet</servlet-name>
+    <url-pattern>/simple-spot</url-pattern>
+  </servlet-mapping>
+
 </web-app>

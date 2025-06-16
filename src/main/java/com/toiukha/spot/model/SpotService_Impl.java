@@ -1,9 +1,11 @@
 package com.toiukha.spot.model;
 
 import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import com.toiukha.spot.util.HibernateUtil;
+
+import com.toiukha.hibernate.HibernateUtil;
 
 public class SpotService_Impl implements SpotService_interface {
 
