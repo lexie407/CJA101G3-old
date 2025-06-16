@@ -16,13 +16,20 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/SpotServlet")
 public class SpotServlet extends HttpServlet {
 	private SpotService_interface SpotService_interface;
 
 	@Override
 	public void init() throws ServletException {
-		SpotService_interface = new SpotService_Impl();
+		System.out.println("[SpotServlet] 初始化開始...");
+		try {
+			SpotService_interface = new SpotService_Impl();
+			System.out.println("[SpotServlet] 初始化成功");
+		} catch (Exception e) {
+			System.err.println("[SpotServlet] 初始化失敗: " + e.getMessage());
+			e.printStackTrace();
+			throw new ServletException("SpotServlet初始化失敗", e);
+		}
 	}
 
 	@Override
@@ -214,8 +221,10 @@ public class SpotServlet extends HttpServlet {
 			SpotService_interface.addSpot(spotVO);
 			// 重定向後強制刷新快取
 			res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-			res.sendRedirect(contextPath + "/SpotServlet?action=listAll");
+			res.sendRedirect(contextPath + "/spot/SpotServlet?action=listAll");
 		} catch (Exception e) {
+			System.err.println("[Servlet ERROR] 新增失敗：" + e.getMessage());
+			e.printStackTrace();
 			errorMsgs.add("新增失敗：" + e.getMessage());
 			req.setAttribute("spotVO", spotVO);
 			req.getRequestDispatcher("/spot/addSpot.jsp").forward(req, res);
@@ -283,8 +292,10 @@ public class SpotServlet extends HttpServlet {
 			SpotService_interface.updateSpot(originalSpot); // 傳遞從DB取得的物件
 			// 重定向時禁用瀏覽器快取
 			res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-			res.sendRedirect(contextPath + "/SpotServlet?action=getOne_For_Display&spotId=" + spotId);
+			res.sendRedirect(contextPath + "/spot/SpotServlet?action=getOne_For_Display&spotId=" + spotId);
 		} catch (Exception e) {
+			System.err.println("[Servlet ERROR] 更新失敗：" + e.getMessage());
+			e.printStackTrace();
 			errorMsgs.add("更新失敗：" + e.getMessage());
 			req.setAttribute("spotVO", originalSpot);
 			req.getRequestDispatcher("/spot/update_spot_input.jsp").forward(req, res);
@@ -302,9 +313,18 @@ public class SpotServlet extends HttpServlet {
 
 		try {
 			SpotService_interface.deleteSpot(spotId);
-			res.sendRedirect(contextPath + "/SpotServlet?action=listAll");
+			res.sendRedirect(contextPath + "/spot/SpotServlet?action=listAll");
 		} catch (Exception e) {
-			handleError(req, res, "刪除失敗：" + e.getMessage());
+			System.err.println("[Servlet ERROR] 刪除失敗：" + e.getMessage());
+			e.printStackTrace();
+			
+			// 檢查是否為外鍵約束錯誤
+			String errorMsg = e.getMessage();
+			if (errorMsg.contains("foreign key constraint fails")) {
+				handleError(req, res, "無法刪除此景點：此景點已被其他資料參照（如收藏清單），請先移除相關資料後再刪除。");
+			} else {
+				handleError(req, res, "刪除失敗：" + errorMsg);
+			}
 		}
 	}
 

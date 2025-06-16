@@ -34,7 +34,7 @@
                     <th>建立者ID</th>
                     <th>地址</th>
                     <th>狀態</th>
-                    <th>操作</th>
+                    <th>操作 </th>
                 </tr>
                 <c:forEach items="${spotList}" var="spot">
                     <tr>
